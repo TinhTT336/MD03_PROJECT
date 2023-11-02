@@ -77,7 +77,7 @@ public class ProductService implements IService<Product, Long> {
 
     public List<Product> sortProductByIncreasePrice() {
         List<Product> productList = productService.findAll();
-        productList.sort((p1, p2) -> (int) (-p1.getUnitPrice() - p2.getUnitPrice()));
+        productList.sort((p1, p2) -> (int) -(p1.getUnitPrice() - p2.getUnitPrice()));
         return productList;
     }
 

@@ -30,7 +30,7 @@ public class ProductView {
 
     public void showProductManagement() {
         do {
-            System.out.println(PURPLE + ".------------------------------------------------------------------------------------------------.");
+            System.out.println(PURPLE + "+------------------------------------------------------------------------------------------------+");
             System.out.printf("|" + WHITE_BOLD_BRIGHT + "   TMESTICS   \uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84                                   Xin chào: %-28s\n", HomeView.userLogin.getFullName() + PURPLE + "                 |");
             System.out.println("|------------------------------------------------------------------------------------------------|");
             System.out.println("|     " + WHITE_BOLD_BRIGHT + "                               \uD83D\uDCE6 QUẢN LÝ SẢN PHẨM                                         " + PURPLE + "|");
@@ -43,7 +43,7 @@ public class ProductView {
             System.out.println("|" + RESET + "                                 6. \uD83D\uDD00 SẮP XẾP SẢN PHẨM THEO GIÁ                                " + PURPLE + "|");
             System.out.println("|" + RESET + "                                 7. \uD83D\uDD3D LỌC SẢN PHẨM THEO TRẠNG THÁI                             " + PURPLE + "|");
             System.out.println("|" + RESET + "                                 0. ↩️ QUAY LẠI                                                 " + PURPLE + "|");
-            System.out.println("'------------------------------------------------------------------------------------------------'\n" + RESET);
+            System.out.println("+------------------------------------------------------------------------------------------------+\n" + RESET);
             System.out.println("Nhập lựa chọn: ");
 
             switch (Validation.validateInt()) {
@@ -101,9 +101,9 @@ public class ProductView {
 
     public void filterProductByStatus() {
         System.out.println("Lựa chọn trạng thái sản phẩm muốn lọc: ");
-        System.out.println(PURPLE + ".---------------------------------------------------------------------------------.");
+        System.out.println(PURPLE + "+---------------------------------------------------------------------------------+");
         System.out.println("|" + RESET + "   1. CÒN HÀNG             |   2. HẾT HÀNG          |   0. QUAY LẠI              " + PURPLE + "|");
-        System.out.println(PURPLE + "'---------------------------------------------------------------------------------'" + RESET);
+        System.out.println(PURPLE + "+---------------------------------------------------------------------------------+" + RESET);
 
         System.out.println("Nhập lựa chọn: ");
         switch (Validation.validateInt()) {
@@ -125,9 +125,9 @@ public class ProductView {
 
     public void sortProductByPrice() {
         System.out.println("Lựa chọn cách sắp xếp sản phẩm theo giá: ");
-        System.out.println(PURPLE + ".---------------------------------------------------------------------------------.");
+        System.out.println(PURPLE + "+---------------------------------------------------------------------------------+");
         System.out.println("|" + RESET + "   1. GIÁ TĂNG DẦN          |    2. GIÁ GIẢM DẦN        |    0. QUAY LẠI         " + PURPLE + "|");
-        System.out.println(PURPLE + "'---------------------------------------------------------------------------------'" + RESET);
+        System.out.println(PURPLE + "+---------------------------------------------------------------------------------+" + RESET);
 
         System.out.println("Nhập lựa chọn: ");
         switch (Validation.validateInt()) {
@@ -262,7 +262,7 @@ public class ProductView {
 
             productService.save(newProduct);
             if (n > 1) {
-                System.out.println(PURPLE + "Thêm mới sản phẩm thứ" + (i + 1) + " thành công !!!" + RESET);
+                System.out.println(PURPLE + "Thêm mới sản phẩm thứ " + (i + 1) + " thành công !!!" + RESET);
             } else {
                 System.out.println(PURPLE + "Thêm mới sản phẩm thành công !!!" + RESET);
             }
@@ -389,14 +389,14 @@ public class ProductView {
 
     public void showCategoryDetail() {
         System.out.println("Các chức năng để lựa chọn: ");
-        System.out.println(PURPLE + ".-----------------------------------------------------------------------.");
-        System.out.println("|" + RESET + " 1. XEM DANH SÁCH SẢN PHẨM TRONG DANH MỤC    |    0. QUAY LẠI           " + PURPLE + "|");
-        System.out.println("'-----------------------------------------------------------------------'" + RESET);
+        System.out.println(PURPLE + "+-----------------------------------------------------------------------+");
+        System.out.println("|" + RESET + " 1. XEM DANH SÁCH SẢN PHẨM TRONG DANH MỤC    |    0. QUAY LẠI          " + PURPLE + "|");
+        System.out.println("+-----------------------------------------------------------------------+" + RESET);
         System.out.println("Nhập lựa chọn: ");
 
         switch (Validation.validateInt()) {
             case 1:
-                System.out.println("Nhập mã danh mục muốn hiện thị chi tiết sản phẩm: ");
+                System.out.println("Nhập mã danh mục muốn hiển thị chi tiết sản phẩm: ");
                 int showIdCat = Validation.validateInt();
                 Category showCat = categoryService.findById((long) showIdCat);
                 if (showCat == null) {
@@ -415,7 +415,7 @@ public class ProductView {
                     }
                 }
                 break;
-            case 2:
+            case 0:
                 return;
             default:
                 System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại" + RESET);
@@ -431,9 +431,9 @@ public class ProductView {
         Category category = categoryService.findById((long) Validation.validateInt());
         if (category == null) {
             System.out.println(RED + " Không có danh mục với mã vừa nhập, vui lòng chọn lại hoặc thêm mới " + RESET);
-            System.out.println(PURPLE + ".--------------------------------------------------------.");
+            System.out.println(PURPLE + "+--------------------------------------------------------+");
             System.out.println("|" + RESET + " 1. CHỌN LẠI DANH MỤC       | 2. THÊM MỚI DANH MỤC      " + PURPLE + "|");
-            System.out.println(PURPLE + "'--------------------------------------------------------'" + RESET);
+            System.out.println(PURPLE + "+--------------------------------------------------------+" + RESET);
             switch (Validation.validateInt()) {
                 case 1:
                     while (true) {
@@ -467,18 +467,18 @@ public class ProductView {
 
     public void showProductDetail() {
         System.out.println("Các chức năng để lựa chọn: ");
-        System.out.println(PURPLE + ".--------------------------------------------------------.");
+        System.out.println(PURPLE + "+--------------------------------------------------------+");
         System.out.println("|" + RESET + " 1. XEM CHI TIẾT SẢN PHẨM    |    0. QUAY LẠI           " + PURPLE + "|");
-        System.out.println("'--------------------------------------------------------'" + RESET);
+        System.out.println("+--------------------------------------------------------+" + RESET);
 
         switch (Validation.validateInt()) {
             case 1:
                 System.out.println("Nhập mã sản phẩm để xem chi tiết: ");
                 int proDetailId = Validation.validateInt();
                 Product productDetail = productService.findById((long) proDetailId);
-
+                showTHead();
                 if (productDetail == null) {
-                    System.out.println("|" + RED + "  Không tìm thấy sản phẩm!!!" + RESET);
+                    System.out.println("|" + RED + "  Không có sản phẩm với mã vừa nhập!!!" + RESET);
                 } else {
                     System.out.println("CHI TIẾT SẢN PHẨM");
                     showProduct(productDetail);
@@ -499,17 +499,33 @@ public class ProductView {
     }
 
     public void showTHead() {
-        System.out.println(PURPLE + ".---------------------------------------------------------------------------------------------------------------------------------. " + RESET);
+        System.out.println(PURPLE + "+---------------------------------------------------------------------------------------------------------------------------------+ " + RESET);
         System.out.println(PURPLE + "|" + RESET + "  ID |                TÊN                 |  DANH MỤC  |                MÔ TẢ               | ĐƠN GIÁ(VND) | TỒN KHO | TRẠNG THÁI" + PURPLE + "|");
         showTLine();
     }
 
     public void showTBody(Product product) {
-        System.out.printf(PURPLE + "|" + RESET + " %-4d| %-35s| %-11s| %-35s|   %-10s |     %-4d| %-10s" + PURPLE + "|\n",
+        System.out.printf(PURPLE + "|" + RESET + " %-4d| %-35.35s| %-11s| %-35.35s|   %-10s |     %-4d| %-10s" + PURPLE + "|\n",
                 product.getId(), product.getProductName(), product.getCategory().getCategoryName(), product.getDescription(), StringFormatter.formatCurrency(product.getUnitPrice()), product.getStock(), (product.isStatus() ? "Còn hàng" : "Hết hàng"));
     }
 
     public void showTLine() {
-        System.out.println(PURPLE + "'---------------------------------------------------------------------------------------------------------------------------------' " + RESET);
+        System.out.println(PURPLE + "+---------------------------------------------------------------------------------------------------------------------------------+ " + RESET);
+    }
+
+    public String subString(String description) {
+        int maxLength = 35;
+
+        if (description.length() > maxLength) {
+            StringBuilder sb = new StringBuilder();
+            int index = 0;
+            while (index < description.length()) {
+                sb.append(description.substring(index, Math.min(index + maxLength, description.length())));
+                sb.append(System.lineSeparator());
+                index += maxLength;
+            }
+            description = sb.toString();
+        }
+        return description;
     }
 }

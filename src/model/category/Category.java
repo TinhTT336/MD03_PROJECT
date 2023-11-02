@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Category extends Entity<Long>{
-//    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private String categoryName;
     private String description;
     private boolean status=true;

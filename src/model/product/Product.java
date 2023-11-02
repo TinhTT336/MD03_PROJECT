@@ -6,6 +6,8 @@ import model.category.Category;
 import java.io.Serializable;
 
 public class Product extends Entity<Long>{
+    private static final long serialVersionUID = 1L;
+
     private String productName;
     private String description;
     private int stock;
@@ -67,6 +69,20 @@ public class Product extends Entity<Long>{
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Product product = (Product) obj;
+        return id.equals(product.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

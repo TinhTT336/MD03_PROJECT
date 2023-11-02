@@ -3,6 +3,8 @@ package model.orderDetail;
 import model.Entity;
 
 public class OrderDetail extends Entity<Long> {
+    private static final long serialVersionUID = 1L;
+
     private Long productId;
     private Long userId;
     private String productName;

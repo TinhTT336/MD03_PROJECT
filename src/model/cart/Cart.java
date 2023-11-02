@@ -7,9 +7,10 @@ import java.io.Serializable;
 import java.util.Map;
 
 public class Cart extends Entity<Long> implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private Long userId;
-//    private Map<Long, Integer>cartUser;
-    private Map<Product, Integer>cartUsers;
+    private Map<Product, Integer> cartUsers;
 
     public Cart() {
     }
@@ -17,6 +18,10 @@ public class Cart extends Entity<Long> implements Serializable {
     public Cart(Long userId, Map<Product, Integer> cartUsers) {
         this.userId = userId;
         this.cartUsers = cartUsers;
+    }
+
+    public Cart(Long newId, Long id, Map<Product, Integer> cart) {
+        super();
     }
 
     public Long getUserId() {
@@ -27,6 +32,7 @@ public class Cart extends Entity<Long> implements Serializable {
         this.userId = userId;
     }
 
+
     public Map<Product, Integer> getCartUsers() {
         return cartUsers;
     }
@@ -34,6 +40,4 @@ public class Cart extends Entity<Long> implements Serializable {
     public void setCartUsers(Map<Product, Integer> cartUsers) {
         this.cartUsers = cartUsers;
     }
-
-
 }

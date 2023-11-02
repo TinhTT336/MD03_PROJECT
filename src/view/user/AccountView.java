@@ -2,6 +2,7 @@ package view.user;
 
 import config.Validation;
 import constant.FileName;
+import constant.Role;
 import model.user.User;
 import service.Service;
 import service.userService.UserService;
@@ -21,17 +22,19 @@ public class AccountView {
 
     public void showAccountManagement() {
         do {
-            System.out.println(PURPLE + ".------------------------------------------------------------------------------------------------.");
+            System.out.println(PURPLE + "+------------------------------------------------------------------------------------------------+");
             System.out.printf("|" + WHITE_BOLD_BRIGHT + "   TMESTICS   \uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84                                   Xin chào: %-28s\n", HomeView.userLogin.getFullName() + PURPLE + "                 |");
             System.out.println("|------------------------------------------------------------------------------------------------|");
-            System.out.println("|"+WHITE_BOLD_BRIGHT+"                                    \uD83D\uDCBC THÔNG TIN TÀI KHOẢN                                      "+PURPLE+"|");
+            System.out.println("|" + WHITE_BOLD_BRIGHT + "                                    \uD83D\uDCBC THÔNG TIN TÀI KHOẢN                                      " + PURPLE + "|");
             System.out.println("|------------------------------------------------------------------------------------------------|");
-            System.out.println("|"+RESET+"                                 1. \uD83D\uDC41️ CHI TIẾT TÀI KHOẢN                                       "+PURPLE+"|");
-            System.out.println("|"+RESET+"                                 2. ✏️ THAY ĐỔI THÔNG TIN                                       "+PURPLE+"|");
-            System.out.println("|"+RESET+"                                 3. ✏️ THAY ĐỔI MẬT KHẨU                                        "+PURPLE+"|");
-            System.out.println("|"+RESET+"                                 4. \uD83D\uDCC5 LỊCH SỬ MUA HÀNG                                         "+PURPLE+"|");
-            System.out.println("|"+RESET+"                                 0. ↩️ QUAY LẠI                                                 "+PURPLE+"|");
-            System.out.println("'------------------------------------------------------------------------------------------------'"+RESET);
+            System.out.println("|" + RESET + "                                 1. \uD83D\uDC41️ CHI TIẾT TÀI KHOẢN                                       " + PURPLE + "|");
+            System.out.println("|" + RESET + "                                 2. ✏️ THAY ĐỔI THÔNG TIN                                       " + PURPLE + "|");
+            System.out.println("|" + RESET + "                                 3. ✏️ THAY ĐỔI MẬT KHẨU                                        " + PURPLE + "|");
+            if (HomeView.userLogin.getRole().equals(Role.USER)) {
+                System.out.println("|" + RESET + "                                 4. \uD83D\uDCC5 LỊCH SỬ MUA HÀNG                                         " + PURPLE + "|");
+            }
+            System.out.println("|" + RESET + "                                 0. ↩️ QUAY LẠI                                                 " + PURPLE + "|");
+            System.out.println("+------------------------------------------------------------------------------------------------+" + RESET);
             System.out.println("Nhập lựa chọn: ");
 
             switch (Validation.validateInt()) {
@@ -107,7 +110,7 @@ public class AccountView {
 
     private void changeAccount() {
         System.out.println("Chọn thông tin muốn thay đổi: ");
-        System.out.println(PURPLE + ".---------------------------------------------------------------------------------------------------------------------------------.");
+        System.out.println(PURPLE + "+---------------------------------------------------------------------------------------------------------------------------------+");
         System.out.println("|" + RESET + "     1. TÊN NGƯỜI DÙNG     |      2. TÊN TÀI KHOẢN      |           3. EMAIL           |            4. SỐ ĐIỆN THOẠI             |" + PURPLE);
         System.out.println("|---------------------------------------------------------------------------------------------------------------------------------|" + RESET);
 
@@ -156,12 +159,12 @@ public class AccountView {
     }
 
     private void showDetailAccount() {
-        System.out.println("\uD83D\uDC41️ THÔNG TIN CHI TIẾT TÀI KHOẢN   ");
-        System.out.println(PURPLE + ".---------------------------------------------------------------------------------------------------------------------------------.");
-        System.out.println("|" + RESET + "  ID  |       TÊN NGƯỜI DÙNG       |    TÊN TÀI KHOẢN    |        EMAIL        |  SỐ ĐIỆN THOẠI  |    VAI TRÒ    |    TRẠNG THÁI " + PURPLE+"|");
+        System.out.println(WHITE_BOLD_BRIGHT + "\uD83D\uDC41️ THÔNG TIN CHI TIẾT TÀI KHOẢN   ");
+        System.out.println(PURPLE + "+---------------------------------------------------------------------------------------------------------------------------------+");
+        System.out.println("|" + RESET + "  ID  |       TÊN NGƯỜI DÙNG       |    TÊN TÀI KHOẢN    |        EMAIL        |  SỐ ĐIỆN THOẠI  |    VAI TRÒ    |    TRẠNG THÁI " + PURPLE + "|");
         System.out.println("|---------------------------------------------------------------------------------------------------------------------------------|");
-        System.out.printf("|"+RESET+" %-4d | %-25s  |    %-15s  | %-19s |    %-11s  | %-14s|    %-10s "+PURPLE+"|\n",
+        System.out.printf("|" + RESET + " %-4d | %-25s  |    %-15s  | %-19s |    %-11s  | %-14s|    %-10s " + PURPLE + "|\n",
                 HomeView.userLogin.getId(), HomeView.userLogin.getFullName(), HomeView.userLogin.getUsername(), HomeView.userLogin.getEmail(), HomeView.userLogin.getPhone(), HomeView.userLogin.getRole().getRoleName(), (HomeView.userLogin.isStatus() ? "Hoạt động" : "Bị khoá"));
-        System.out.println(PURPLE + "'---------------------------------------------------------------------------------------------------------------------------------|' " + RESET);
+        System.out.println(PURPLE + "+---------------------------------------------------------------------------------------------------------------------------------+' " + RESET);
     }
 }

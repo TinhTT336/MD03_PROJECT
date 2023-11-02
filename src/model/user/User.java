@@ -7,6 +7,8 @@ import model.Entity;
 import java.io.Serializable;
 
 public class User extends Entity<Long>implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String fullName;
     private String username;
     private String password;

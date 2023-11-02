@@ -40,8 +40,8 @@ public class CartService implements IService<Cart, Long> {
         return cartService.deleteById(id);
     }
     public Cart getCurrentCartUser(){
-        return new Config<Cart>().readFile(FileName.CART);
-//        return cartService.getOne();
+//        return new Config<Cart>().readFile(FileName.CART);
+        return cartService.getOne();
     }
 
 }

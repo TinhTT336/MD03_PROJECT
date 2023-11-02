@@ -6,9 +6,11 @@ import model.category.Category;
 import model.product.Product;
 import service.Service;
 import service.categoryService.CategoryService;
+import view.product.ProductView;
 import view.user.HomeView;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static config.Color.*;
@@ -25,7 +27,7 @@ public class CategoryView {
 
     public void showCategoryManagement() {
         do {
-            System.out.println(PURPLE + ".------------------------------------------------------------------------------------------------.");
+            System.out.println(PURPLE + "+------------------------------------------------------------------------------------------------+");
             System.out.printf("|" + WHITE_BOLD_BRIGHT + "   TMESTICS   \uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84                                   Xin chào: %-28s\n", HomeView.userLogin.getFullName() + PURPLE + "                 |");
             System.out.println("|------------------------------------------------------------------------------------------------|");
             System.out.println("|" + WHITE_BOLD_BRIGHT + "                                    \uD83D\uDCC2 QUẢN LÝ DANH MỤC                                         " + PURPLE + "|");
@@ -37,12 +39,15 @@ public class CategoryView {
             System.out.println("|" + RESET + "                                 5. \uD83D\uDD0D TÌM KIẾM DANH MỤC                                        " + PURPLE + "|");
             System.out.println("|" + RESET + "                                 6. \uD83D\uDD00 SẮP XẾP DANH MỤC THEO TÊN                                " + PURPLE + "|");
             System.out.println("|" + RESET + "                                 0. ↩️ QUAY LẠI                                                 " + PURPLE + "|");
-            System.out.println("'------------------------------------------------------------------------------------------------'" + RESET);
+            System.out.println("+------------------------------------------------------------------------------------------------+" + RESET);
             System.out.println("Nhập lựa chọn: ");
 
             switch (Validation.validateInt()) {
                 case 1:
                     showCategoryList(categoryService.findAll());
+                    if (!categoryService.findAll().isEmpty()) {
+                        new ProductView().showCategoryDetail();
+                    }
                     break;
                 case 2:
                     addCategory();
@@ -88,7 +93,7 @@ public class CategoryView {
 
             hiddenCategory.setStatus(!hiddenCategory.isStatus());
             categoryService.save(hiddenCategory);
-            updateProductList(hiddenId,hiddenCategory);
+            updateProductList(hiddenId, hiddenCategory);
 
             if (hiddenCategory.isStatus()) {
                 System.out.println("Đã hiện danh mục!");
@@ -99,7 +104,7 @@ public class CategoryView {
         }
     }
 
-    private void updateProductList(int id,Category category) {
+    private void updateProductList(int id, Category category) {
         for (Product product : productService.findAll()) {
             if (product.getCategory().getId() == id) {
                 product.setCategory(category);
@@ -178,7 +183,7 @@ public class CategoryView {
             showCategory(deleteCategory);
             System.out.println(" ");
             categoryService.deleteById((long) deleteId);
-            updateProductList(deleteId,deleteCategory);
+            updateProductList(deleteId, deleteCategory);
             System.out.println(PURPLE + "Đã xoá danh mục thành công!!!" + RESET);
             System.out.println();
         }
@@ -196,9 +201,9 @@ public class CategoryView {
             showCategory(editCategory);
             System.out.println(" ");
             System.out.println("Chọn nội dung cần chỉnh sửa: ");
-            System.out.println(PURPLE + ".--------------------------------------------------------------------------------------------------------------.");
+            System.out.println(PURPLE + "+--------------------------------------------------------------------------------------------------------------+");
             System.out.println("|" + RESET + " 1. TÊN DANH MỤC                    | 2. MÔ TẢ DANH MỤC                     | 3. TRẠNG THÁI DANH MỤC                             " + PURPLE + "|");
-            System.out.println(PURPLE + "'--------------------------------------------------------------------------------------------------------------'" + RESET);
+            System.out.println(PURPLE + "+--------------------------------------------------------------------------------------------------------------+" + RESET);
 
             switch (Validation.validateInt()) {
                 case 1:
@@ -218,7 +223,7 @@ public class CategoryView {
                     break;
             }
             categoryService.save(editCategory);
-            updateProductList(editId,editCategory);
+            updateProductList(editId, editCategory);
             System.out.println(PURPLE + "Cập nhật danh mục thành công!!!" + RESET);
             System.out.println();
         }
@@ -297,7 +302,7 @@ public class CategoryView {
 
 
     public void showCategoryList(List<Category> categoryList) {
-        System.out.println(YELLOW_BOLD_BRIGHT + "DANH MỤC SẢN PHẨM                       ");
+        System.out.println(WHITE_BOLD_BRIGHT + "DANH MỤC SẢN PHẨM                       ");
         showTHead();
         if (categoryService.findAll().isEmpty()) {
             System.out.println("|" + RED + "  Không có danh mục nào!!!" + RESET);
@@ -309,7 +314,6 @@ public class CategoryView {
                 showTBody(category);
             }
             showTLine();
-            System.out.println(" ");
         }
     }
 
@@ -331,18 +335,18 @@ public class CategoryView {
     }
 
     public void showTHead() {
-        System.out.println(PURPLE + ".----------------------------------------------------------------------------------------------------------------." + RESET);
-        System.out.println(PURPLE + "|" + RESET + "      ID      |             DANH MỤC                |                 MÔ TẢ                |     TRẠNG THÁI     " + PURPLE + "|");
+        System.out.println(PURPLE + "+------------------------------------------------------------------------------------------------------------------------------------+" + RESET);
+        System.out.println(PURPLE + "|" + RESET + "      ID      |             DANH MỤC            |                 MÔ TẢ                |     TRẠNG THÁI     |  SỐ LƯỢNG SẢN PHẨM   " + PURPLE + "|");
         showTLine();
     }
 
     public void showTBody(Category category) {
-        System.out.printf(PURPLE + "|" + RESET + "      %-8d|     %-32s|         %-29s| %-16s   " + PURPLE + "|\n",
-                category.getId(), category.getCategoryName(), category.getDescription(), (category.isStatus() ? "Hoạt động" : "Ngừng kinh doanh"));
+        System.out.printf(PURPLE + "|" + RESET + "      %-8d|     %-28s|         %-29s| %-16s   |        %3s           " + PURPLE + "|\n",
+                category.getId(), category.getCategoryName(), category.getDescription(), (category.isStatus() ? "Hoạt động" : "Ngừng kinh doanh"), productService.findAll().stream().filter(cat -> Objects.equals(cat.getCategory().getId(), category.getId())).count());
     }
 
     public void showTLine() {
-        System.out.println(PURPLE + "'----------------------------------------------------------------------------------------------------------------'" + RESET);
+        System.out.println(PURPLE + "+------------------------------------------------------------------------------------------------------------------------------------+" + RESET);
 
     }
 

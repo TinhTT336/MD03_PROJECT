@@ -41,7 +41,7 @@ public class CategoryService implements IService<Category, Long> {
 
     public List<Category> sortByName() {
         List<Category>categoryList=categoryService.findAll();
-        categoryList.sort((c1, c2) -> c1.getCategoryName().compareTo(c2.getCategoryName()));
+        categoryList.sort((c1, c2) -> c2.getCategoryName().compareTo(c1.getCategoryName()));
         return categoryList;
     }
 

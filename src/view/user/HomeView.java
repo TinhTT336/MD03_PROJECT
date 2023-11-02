@@ -26,7 +26,7 @@ public class HomeView {
 
     public void showMenuHome() {
         do {
-            System.out.println(PURPLE+".------------------------------------------------------------------------------------------------.");
+            System.out.println(PURPLE+"+------------------------------------------------------------------------------------------------+");
             System.out.println("|"+WHITE_BOLD_BRIGHT+"            \uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84               TMESTICS               \uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84               "+PURPLE+"|");
             System.out.println("|------------------------------------------------------------------------------------------------|");
             System.out.println("|"+RESET+"                                 1. \uD83D\uDD11 ĐĂNG NHẬP                                                "+PURPLE+"|");
@@ -38,7 +38,7 @@ public class HomeView {
             System.out.println("|"+RESET+"                                 7. \uD83D\uDD0D TÌM KIẾM DANH MỤC SẢN PHẨM                               "+PURPLE+"|");
             System.out.println("|"+RESET+"                                 8. \uD83D\uDD00 SẮP XẾP SẢN PHẨM THEO GIÁ                                "+PURPLE+"|");
             System.out.println("|"+RESET+"                                 0. ❌ THOÁT                                                    "+PURPLE+"|");
-            System.out.println("'------------------------------------------------------------------------------------------------'"+RESET);
+            System.out.println("+------------------------------------------------------------------------------------------------+"+RESET);
             System.out.println("Nhập lựa chọn: ");
             switch (Validation.validateInt()) {
                 case 1:
@@ -49,14 +49,18 @@ public class HomeView {
                     break;
                 case 3:
                     new ProductView().showTrueProduct(productService.findAll());
-                    new ProductView().showProductDetail();
+                    if(!productService.findAll().isEmpty()){
+                        new ProductView().showProductDetail();
+                    }
                     break;
                 case 4:
                     new UserView().showFeaturedProduct();
                     break;
                 case 5:
                     new CategoryView().showCategoryListForPro();
-                    new ProductView().showCategoryDetail();
+                    if(!productService.findAll().isEmpty()){
+                        new ProductView().showCategoryDetail();
+                    }
                     break;
                 case 6:
                     new ProductView().searchTrueProduct();
@@ -150,13 +154,11 @@ public class HomeView {
             if (user.getRole().equals(Role.ADMIN)) {
                 userLogin = user;
                 new Config<User>().writeFile(FileName.LOGIN, userLogin);
-//            System.out.println("Đăng nhập thành công vào trang quản lý!");
                 new AdminView().showMenuAdmin();
             } else {
                 if (user.getRole().equals(Role.USER)) {
                     userLogin = user;
                     new Config<User>().writeFile(FileName.LOGIN, userLogin);
-//                System.out.println("Đăng nhập thành công!");
                     new UserView().showMenuUser();
                 }
             }

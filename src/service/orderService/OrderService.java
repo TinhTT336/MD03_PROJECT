@@ -2,6 +2,7 @@ package service.orderService;
 
 import constant.FileName;
 import model.order.Order;
+import model.orderDetail.OrderDetail;
 import model.user.User;
 import service.IService;
 import service.Service;
@@ -12,10 +13,12 @@ import java.util.List;
 public class OrderService implements IService<Order,Long> {
     private Service<Order,Long>orderService;
     private Service<User,Long>userService;
+    private Service<OrderDetail,Long>orderDetailService;
 
     public OrderService() {
         this.orderService = new Service<>(FileName.ORDER);
         this.userService = new Service<>(FileName.USER);
+        this.orderDetailService=new Service<>(FileName.ORDERDETAIL);
     }
 
     @Override

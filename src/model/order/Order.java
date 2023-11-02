@@ -1,39 +1,43 @@
 package model.order;
 
+import constant.OrderStatus;
 import model.Entity;
 import model.orderDetail.OrderDetail;
+import model.product.Product;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
-public class Order extends Entity<Long> {
-    private int userId;
+public class Order extends Entity<Long>implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private Long userId;
     private String name;
     private String phoneNumber;
     private String address;
     private double total;
+    private OrderStatus orderStatus;
     private List<OrderDetail> orderDetail;
-    private String orderAt;
-    private String deliverAt;
+    private Map<Product,Integer> ordersDetail;
+    private LocalDateTime orderAt;
+    private LocalDateTime deliverAt;
 
-    public Order() {
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
 
-    public Order(int userId, String name, String phoneNumber, String address, double total, List<OrderDetail> orderDetail, String orderAt, String deliverAt) {
-        this.userId = userId;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.total = total;
-        this.orderDetail = orderDetail;
-        this.orderAt = orderAt;
-        this.deliverAt = deliverAt;
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -77,19 +81,27 @@ public class Order extends Entity<Long> {
         this.orderDetail = orderDetail;
     }
 
-    public String getOrderAt() {
+    public LocalDateTime getOrderAt() {
         return orderAt;
     }
 
-    public void setOrderAt(String orderAt) {
+    public void setOrderAt(LocalDateTime orderAt) {
         this.orderAt = orderAt;
     }
 
-    public String getDeliverAt() {
+    public LocalDateTime getDeliverAt() {
         return deliverAt;
     }
 
-    public void setDeliverAt(String deliverAt) {
+    public void setDeliverAt(LocalDateTime deliverAt) {
         this.deliverAt = deliverAt;
+    }
+
+    public Map<Product, Integer> getOrdersDetail() {
+        return ordersDetail;
+    }
+
+    public void setOrdersDetail(Map<Product, Integer> ordersDetail) {
+        this.ordersDetail = ordersDetail;
     }
 }

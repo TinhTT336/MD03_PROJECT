@@ -25,7 +25,7 @@ public class UserManagementView {
 
     public void showUserManagement() {
         do {
-            System.out.println(PURPLE + ".------------------------------------------------------------------------------------------------.");
+            System.out.println(PURPLE + "+------------------------------------------------------------------------------------------------+");
             System.out.printf("|" + WHITE_BOLD_BRIGHT + "   TMESTICS   \uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84                                   Xin chào: %-28s\n", HomeView.userLogin.getFullName() + PURPLE + "                 |");
             System.out.println("|------------------------------------------------------------------------------------------------|");
             System.out.println("|" + WHITE_BOLD_BRIGHT + "                                    \uD83D\uDC64 QUẢN LÝ TÀI KHOẢN                                        " + PURPLE + "|");
@@ -36,7 +36,7 @@ public class UserManagementView {
             System.out.println("|" + RESET + "                                 4. \uD83D\uDD0D TÌM KIẾM TÀI KHOẢN                                       " + PURPLE + "|");
             System.out.println("|" + RESET + "                                 5. \uD83D\uDD00 LỌC THEO TRẠNG THÁI TÀI KHOẢN                            " + PURPLE + "|");
             System.out.println("|" + RESET + "                                 0. ↩️ QUAY LẠI                                                 " + PURPLE + "|");
-            System.out.println("'------------------------------------------------------------------------------------------------'"+RESET);
+            System.out.println("+------------------------------------------------------------------------------------------------+"+RESET);
             System.out.println("Nhập lựa chọn: ");
 
             switch (Validation.validateInt()) {
@@ -66,9 +66,9 @@ public class UserManagementView {
 
     private void filterUser() {
         System.out.println("Lựa chọn trạng thái tài khoản muốn lọc: ");
-        System.out.println(PURPLE + ".--------------------------------------------------------.");
-        System.out.println("|" + RESET + " 1. ĐANG HOẠT ĐÔNG           | 2. BỊ KHOÁ               |" + PURPLE);
-        System.out.println(PURPLE + "|--------------------------------------------------------|" + RESET);
+        System.out.println(PURPLE + "+---------------------------------------------------------------------------------+");
+        System.out.println("|" + RESET + " 1. ĐANG HOẠT ĐÔNG           | 2. BỊ KHOÁ               | 0. QUAY LẠI            " + PURPLE+"|");
+        System.out.println(PURPLE + "+---------------------------------------------------------------------------------+" + RESET);
 
         System.out.println("Nhập lựa chọn: ");
         switch (Validation.validateInt()) {
@@ -80,11 +80,12 @@ public class UserManagementView {
                 List<User> falseUsers = userService.findAll().stream().filter(user -> !user.isStatus()).collect(Collectors.toList());
                 showListUser(falseUsers);
                 break;
+            case 0:
+                return;
             default:
                 System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại" + RESET);
                 break;
         }
-
     }
 
     private void findUser() {
@@ -191,7 +192,7 @@ public class UserManagementView {
     }
 
     private void showTHead() {
-        System.out.println(PURPLE + ".---------------------------------------------------------------------------------------------------------------------------------.");
+        System.out.println(PURPLE + "+---------------------------------------------------------------------------------------------------------------------------------+");
         System.out.println("|" + RESET + "  ID  |       TÊN NGƯỜI DÙNG       |    TÊN TÀI KHOẢN    |        EMAIL        |  SỐ ĐIỆN THOẠI  |    VAI TRÒ    |    TRẠNG THÁI " + PURPLE + "|");
         showTLine();
     }
@@ -202,7 +203,7 @@ public class UserManagementView {
     }
 
     private void showTLine() {
-        System.out.println(PURPLE+"'---------------------------------------------------------------------------------------------------------------------------------'" + RESET);
+        System.out.println(PURPLE+"+---------------------------------------------------------------------------------------------------------------------------------+" + RESET);
     }
 
     private void showUser(User user) {
