@@ -3,8 +3,10 @@ package service.cartService;
 import config.Config;
 import constant.FileName;
 import model.cart.Cart;
+import model.user.User;
 import service.IService;
 import service.Service;
+import service.userService.UserService;
 
 import java.util.List;
 
@@ -39,9 +41,29 @@ public class CartService implements IService<Cart, Long> {
     public boolean deleteById(Long id) {
         return cartService.deleteById(id);
     }
-    public Cart getCurrentCartUser(){
+
+    public Cart getCurrentCartUser() {
+        User userLogin = new UserService().getCurrentUser();
 //        return new Config<Cart>().readFile(FileName.CART);
-        return cartService.getOne();
+        if (!cartService.findAll().isEmpty() && cartService.findAll() != null) {
+            for (Cart cart : cartService.findAll()) {
+                if (cart.getUserId().equals(userLogin.getId())) {
+                    return cart;
+                }
+            }
+        }
+        return null;
     }
+
+    public Cart getCartByUserLogin(User userLogin) {
+//        User userLogin = new UserService().getCurrentUser();
+        for (Cart cart : cartService.findAll()) {
+            if (cart.getUserId().equals(userLogin.getId())) {
+                return cart;
+            }
+        }
+        return null;
+    }
+
 
 }

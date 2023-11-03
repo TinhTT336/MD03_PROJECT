@@ -5,12 +5,12 @@ import config.Validation;
 import constant.FileName;
 import model.category.Category;
 import model.order.Order;
-import model.orderDetail.OrderDetail;
 import model.product.Product;
 import service.Service;
 import service.productService.ProductService;
 import view.category.CategoryView;
 import view.user.HomeView;
+import view.user.UserView;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,12 +20,10 @@ import static config.Color.*;
 public class ProductView {
     private Service<Product, Long> productService;
     private Service<Category, Long> categoryService;
-    private Service<Order, Long> orderService;
 
     public ProductView() {
         this.productService = new Service<>(FileName.PRODUCT);
         this.categoryService = new Service<>(FileName.CATEGORY);
-        this.orderService = new Service<>(FileName.ORDER);
     }
 
     public void showProductManagement() {
@@ -72,7 +70,7 @@ public class ProductView {
                 case 0:
                     return;
                 default:
-                    System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại" + RESET);
+                    System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
                     break;
             }
         } while (true);
@@ -84,7 +82,7 @@ public class ProductView {
 
         Product hiddenProduct = productService.findById((long) hiddenId);
         if (hiddenProduct == null) {
-            System.out.println(RED + " Không có sản phẩm với mã vừa nhập " + RESET);
+            System.out.println(RED + "Không có sản phẩm với mã vừa nhập!!! " + RESET);
         } else {
             System.out.println("Thông tin sản phẩm muốn chỉnh sửa: ");
             showProduct(hiddenProduct);
@@ -92,9 +90,9 @@ public class ProductView {
             hiddenProduct.setStatus(!hiddenProduct.isStatus());
             productService.save(hiddenProduct);
             if (hiddenProduct.isStatus()) {
-                System.out.println("Đã hiện sản phẩm!");
+                System.out.println(PURPLE_BRIGHT+"Đã hiện sản phẩm!"+RESET);
             } else {
-                System.out.println("Đã ẩn sản phẩm!");
+                System.out.println(PURPLE_BRIGHT+"Đã ẩn sản phẩm!"+RESET);
             }
         }
     }
@@ -102,7 +100,7 @@ public class ProductView {
     public void filterProductByStatus() {
         System.out.println("Lựa chọn trạng thái sản phẩm muốn lọc: ");
         System.out.println(PURPLE + "+---------------------------------------------------------------------------------+");
-        System.out.println("|" + RESET + "   1. CÒN HÀNG             |   2. HẾT HÀNG          |   0. QUAY LẠI              " + PURPLE + "|");
+        System.out.println("|" + WHITE_BRIGHT + "   1. CÒN HÀNG             |   2. HẾT HÀNG          |   0. QUAY LẠI              " + PURPLE + "|");
         System.out.println(PURPLE + "+---------------------------------------------------------------------------------+" + RESET);
 
         System.out.println("Nhập lựa chọn: ");
@@ -118,7 +116,7 @@ public class ProductView {
             case 0:
                 return;
             default:
-                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại" + RESET);
+                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
                 break;
         }
     }
@@ -126,7 +124,7 @@ public class ProductView {
     public void sortProductByPrice() {
         System.out.println("Lựa chọn cách sắp xếp sản phẩm theo giá: ");
         System.out.println(PURPLE + "+---------------------------------------------------------------------------------+");
-        System.out.println("|" + RESET + "   1. GIÁ TĂNG DẦN          |    2. GIÁ GIẢM DẦN        |    0. QUAY LẠI         " + PURPLE + "|");
+        System.out.println("|" + WHITE_BRIGHT + "   1. GIÁ TĂNG DẦN          |    2. GIÁ GIẢM DẦN        |    0. QUAY LẠI         " + PURPLE + "|");
         System.out.println(PURPLE + "+---------------------------------------------------------------------------------+" + RESET);
 
         System.out.println("Nhập lựa chọn: ");
@@ -142,7 +140,7 @@ public class ProductView {
             case 0:
                 return;
             default:
-                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại" + RESET);
+                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
                 break;
         }
     }
@@ -169,25 +167,18 @@ public class ProductView {
         Product deleteProduct = productService.findById((long) deleteId);
 
         if (deleteProduct == null) {
-            System.out.println(RED + " Không có sản phẩm với mã vừa nhập " + RESET);
+            System.out.println(RED + " Không có sản phẩm với mã vừa nhập!!! " + RESET);
         } else {
             System.out.println("Thông tin sản phẩm muốn xoá: ");
             showProduct(deleteProduct);
 
             if (deleteProduct.getStock() > 0) {
-                System.out.println("Sản phẩm đang có tồn kho, không được phép xoá");
+                System.out.println("Sản phẩm đang có tồn kho, không được phép xoá!!!");
             } else if (deleteProduct.isStatus()) {
-                System.out.println("Sản phẩm đang kinh doanh, không được phép xoá");
-            }
-            for (Order order : orderService.findAll()) {
-                for (OrderDetail orderDetail : order.getOrderDetail()) {
-                    if (orderDetail.getProductId() == deleteId) {
-                        System.out.println("Sản phẩm đang được bán, không được phép xoá");
-                    }
-                }
+                System.out.println("Sản phẩm đang kinh doanh, không được phép xoá!!!");
             }
             productService.deleteById((long) deleteId);
-            System.out.println("Xoá sản phẩm thành công !!!");
+            System.out.println(PURPLE+"Xoá sản phẩm thành công !!!"+RESET);
         }
     }
 
@@ -197,14 +188,14 @@ public class ProductView {
 
         Product editProduct = productService.findById((long) editId);
         if (editProduct == null) {
-            System.out.println(RED + " Không có sản phẩm với mã vừa nhập " + RESET);
+            System.out.println(RED + "Không có sản phẩm với mã vừa nhập!!! " + RESET);
         } else {
             System.out.println("Thông tin sản phẩm muốn chỉnh sửa: ");
             showProduct(editProduct);
 
             System.out.println("Chọn thông tin muốn chỉnh sửa: ");
             showTLine();
-            System.out.println(PURPLE + "|" + RESET + "  1. TÊN SẢN PHẨM      |    2. DANH MỤC SẢN PHẨM     |       3. MÔ TẢ     |    4. ĐƠN GIÁ    |   5. TỒN KHO   |  0. QUAY LẠI     " + PURPLE + "|");
+            System.out.println(PURPLE + "|" + WHITE_BRIGHT + "  1. TÊN SẢN PHẨM      |    2. DANH MỤC SẢN PHẨM     |       3. MÔ TẢ     |    4. ĐƠN GIÁ    |   5. TỒN KHO   |  0. QUAY LẠI     " + PURPLE + "|");
             showTLine();
             System.out.println("Nhập lựa chọn: ");
             switch (Validation.validateInt()) {
@@ -228,21 +219,21 @@ public class ProductView {
                     inputStock(editProduct);
                     break;
                 default:
-                    System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại" + RESET);
+                    System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
                     break;
             }
             productService.save(editProduct);
-            System.out.println("Cập nhật sản phẩm thành công!!!");
+            System.out.println(PURPLE_BRIGHT+"Cập nhật sản phẩm thành công!"+RESET);
         }
     }
 
     private void addProduct() {
-        System.out.println("Nhập số lượng sản phẩm muốn thêm mới");
+        System.out.println("Nhập số lượng sản phẩm muốn thêm mới: ");
         int n = Validation.validateInt();
 
         for (int i = 0; i < n; i++) {
             if (n > 1) {
-                System.out.println("Thêm mới sản phẩm thứ " + (i + 1));
+                System.out.println(PURPLE+"Thêm mới sản phẩm thứ " + (i + 1)+RESET);
             }
             Product newProduct = new Product();
             newProduct.setId(productService.getNewId());
@@ -262,20 +253,18 @@ public class ProductView {
 
             productService.save(newProduct);
             if (n > 1) {
-                System.out.println(PURPLE + "Thêm mới sản phẩm thứ " + (i + 1) + " thành công !!!" + RESET);
+                System.out.println(PURPLE_BRIGHT + "Thêm mới sản phẩm thứ " + (i + 1) + " thành công!" + RESET);
             } else {
-                System.out.println(PURPLE + "Thêm mới sản phẩm thành công !!!" + RESET);
+                System.out.println(PURPLE_BRIGHT + "Thêm mới sản phẩm thành công!" + RESET);
             }
-            System.out.println(" ");
         }
-
     }
 
     private void inputStock(Product newProduct) {
         while (true) {
             int stock = Validation.validateInt();
             if (stock < 0) {
-                System.out.println(RED + "Tồn kho sản phẩm phải lớn hơn 0" + RESET);
+                System.out.println(RED + "Tồn kho sản phẩm phải lớn hơn 0!!!" + RESET);
             } else {
                 newProduct.setStock(stock);
                 break;
@@ -287,7 +276,7 @@ public class ProductView {
         while (true) {
             double price = Double.parseDouble(Validation.validateString());
             if (price < 0) {
-                System.out.println(RED + "Đơn giá phải lớn hơn 0" + RESET);
+                System.out.println(RED + "Đơn giá phải lớn hơn 0!!!" + RESET);
             } else {
                 newProduct.setUnitPrice(price);
                 break;
@@ -305,7 +294,7 @@ public class ProductView {
                 }
             }
             if (isExist) {
-                System.out.println(RED + " Tên sản phẩm đã tồn tại, vui lòng nhập lại" + RESET);
+                System.out.println(RED + "Tên sản phẩm đã tồn tại, vui lòng nhập lại!!!" + RESET);
             } else {
                 newProduct.setProductName(productName);
                 break;
@@ -345,7 +334,7 @@ public class ProductView {
     }
 
     public void searchTrueProduct() {
-        System.out.println("Nhập tên sản phẩm muốn tìm kiếm:");
+        System.out.println("Nhập tên sản phẩm muốn tìm kiếm: ");
         String productName = Validation.validateString();
 
         List<Product> productList = new ProductService().searchTrueProduct(productName);
@@ -355,13 +344,13 @@ public class ProductView {
             showTLine();
         } else {
             showTrueProduct(productList);
-            System.out.println(" Tìm được " + productList.size() + " sản phẩm với tên sản phẩm " + "'" + productName + "'");
+            System.out.println(PURPLE_BRIGHT+" Tìm được " + productList.size() + " sản phẩm với tên sản phẩm " + "'" + productName + "'"+RESET);
             System.out.println();
         }
     }
 
     public void searchTrueProductByCat() {
-        System.out.println("Nhập tên danh mục muốn tìm kiếm:");
+        System.out.println("Nhập tên danh mục muốn tìm kiếm: ");
         String catName = Validation.validateString();
         int count = 0;
 
@@ -378,7 +367,7 @@ public class ProductView {
 
         if (count > 0) {
             showTLine();
-            System.out.println("Tìm được " + count + " sản phẩm trong danh mục " + "'" + catName + "'");
+            System.out.println(PURPLE_BRIGHT+"Tìm được " + count + " sản phẩm trong danh mục " + "'" + catName + "'"+RESET);
             System.out.println();
         } else {
             System.out.println("|" + RED + "  Không tìm thấy sản phẩm nào!!!" + RESET);
@@ -390,7 +379,7 @@ public class ProductView {
     public void showCategoryDetail() {
         System.out.println("Các chức năng để lựa chọn: ");
         System.out.println(PURPLE + "+-----------------------------------------------------------------------+");
-        System.out.println("|" + RESET + " 1. XEM DANH SÁCH SẢN PHẨM TRONG DANH MỤC    |    0. QUAY LẠI          " + PURPLE + "|");
+        System.out.println("|" + WHITE_BRIGHT + " 1. XEM DANH SÁCH SẢN PHẨM TRONG DANH MỤC    |    0. QUAY LẠI          " + PURPLE + "|");
         System.out.println("+-----------------------------------------------------------------------+" + RESET);
         System.out.println("Nhập lựa chọn: ");
 
@@ -400,10 +389,10 @@ public class ProductView {
                 int showIdCat = Validation.validateInt();
                 Category showCat = categoryService.findById((long) showIdCat);
                 if (showCat == null) {
-                    System.out.println(RED + " Không tìm thấy danh mục với mã vừa nhập!!!" + RESET);
+                    System.out.println(RED + "Không tìm thấy danh mục với mã vừa nhập!!!" + RESET);
                 } else {
                     if (!showCat.isStatus()) {
-                        System.out.println(RED + " Không tìm thấy danh mục với mã vừa nhập!!!" + RESET);
+                        System.out.println(RED + "Không tìm thấy danh mục với mã vừa nhập!!!" + RESET);
                         return;
                     }
                     List<Product> productList = new ProductService().searchTrueProductByCatID(showIdCat);
@@ -418,7 +407,7 @@ public class ProductView {
             case 0:
                 return;
             default:
-                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại" + RESET);
+                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
                 break;
         }
     }
@@ -430,9 +419,9 @@ public class ProductView {
         System.out.println("Nhập mã danh mục: ");
         Category category = categoryService.findById((long) Validation.validateInt());
         if (category == null) {
-            System.out.println(RED + " Không có danh mục với mã vừa nhập, vui lòng chọn lại hoặc thêm mới " + RESET);
+            System.out.println(RED + "Không có danh mục với mã vừa nhập, vui lòng chọn lại hoặc thêm mới!!! " + RESET);
             System.out.println(PURPLE + "+--------------------------------------------------------+");
-            System.out.println("|" + RESET + " 1. CHỌN LẠI DANH MỤC       | 2. THÊM MỚI DANH MỤC      " + PURPLE + "|");
+            System.out.println("|" + WHITE_BRIGHT + " 1. CHỌN LẠI DANH MỤC       | 2. THÊM MỚI DANH MỤC      " + PURPLE + "|");
             System.out.println(PURPLE + "+--------------------------------------------------------+" + RESET);
             switch (Validation.validateInt()) {
                 case 1:
@@ -443,7 +432,7 @@ public class ProductView {
                         System.out.println("Nhập danh mục: ");
                         category = categoryService.findById((long) Validation.validateInt());
                         if (category == null) {
-                            System.out.println(RED + " Không có danh mục với mã vừa nhập, vui lòng chọn lại " + RESET);
+                            System.out.println(RED + "Không có danh mục với mã vừa nhập, vui lòng chọn lại!!! " + RESET);
                         } else {
                             newProduct.setCategory(category);
                             break;
@@ -454,7 +443,7 @@ public class ProductView {
                     new CategoryView().addOneCategory();
                     break;
                 default:
-                    System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại" + RESET);
+                    System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
                     break;
             }
         } else {
@@ -468,7 +457,7 @@ public class ProductView {
     public void showProductDetail() {
         System.out.println("Các chức năng để lựa chọn: ");
         System.out.println(PURPLE + "+--------------------------------------------------------+");
-        System.out.println("|" + RESET + " 1. XEM CHI TIẾT SẢN PHẨM    |    0. QUAY LẠI           " + PURPLE + "|");
+        System.out.println("|" + WHITE_BRIGHT + " 1. XEM CHI TIẾT SẢN PHẨM    |    0. QUAY LẠI           " + PURPLE + "|");
         System.out.println("+--------------------------------------------------------+" + RESET);
 
         switch (Validation.validateInt()) {
@@ -476,18 +465,19 @@ public class ProductView {
                 System.out.println("Nhập mã sản phẩm để xem chi tiết: ");
                 int proDetailId = Validation.validateInt();
                 Product productDetail = productService.findById((long) proDetailId);
-                showTHead();
                 if (productDetail == null) {
+                    showTHead();
                     System.out.println("|" + RED + "  Không có sản phẩm với mã vừa nhập!!!" + RESET);
                 } else {
-                    System.out.println("CHI TIẾT SẢN PHẨM");
+                    System.out.println(WHITE_BOLD_BRIGHT+"CHI TIẾT SẢN PHẨM"+RESET);
                     showProduct(productDetail);
+                    new UserView().buyOneProduct(productDetail);
                 }
                 break;
             case 0:
                 return;
             default:
-                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại" + RESET);
+                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
                 break;
         }
     }
@@ -500,7 +490,7 @@ public class ProductView {
 
     public void showTHead() {
         System.out.println(PURPLE + "+---------------------------------------------------------------------------------------------------------------------------------+ " + RESET);
-        System.out.println(PURPLE + "|" + RESET + "  ID |                TÊN                 |  DANH MỤC  |                MÔ TẢ               | ĐƠN GIÁ(VND) | TỒN KHO | TRẠNG THÁI" + PURPLE + "|");
+        System.out.println(PURPLE + "|" + WHITE_BRIGHT + "  ID |                TÊN                 |  DANH MỤC  |                MÔ TẢ               |    ĐƠN GIÁ   | TỒN KHO | TRẠNG THÁI" + PURPLE + "|");
         showTLine();
     }
 
@@ -513,19 +503,4 @@ public class ProductView {
         System.out.println(PURPLE + "+---------------------------------------------------------------------------------------------------------------------------------+ " + RESET);
     }
 
-    public String subString(String description) {
-        int maxLength = 35;
-
-        if (description.length() > maxLength) {
-            StringBuilder sb = new StringBuilder();
-            int index = 0;
-            while (index < description.length()) {
-                sb.append(description.substring(index, Math.min(index + maxLength, description.length())));
-                sb.append(System.lineSeparator());
-                index += maxLength;
-            }
-            description = sb.toString();
-        }
-        return description;
-    }
 }

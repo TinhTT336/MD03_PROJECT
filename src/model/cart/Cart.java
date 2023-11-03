@@ -15,13 +15,10 @@ public class Cart extends Entity<Long> implements Serializable {
     public Cart() {
     }
 
-    public Cart(Long userId, Map<Product, Integer> cartUsers) {
+    public Cart(Long id,Long userId, Map<Product, Integer> cartUsers) {
+        this.id=id;
         this.userId = userId;
         this.cartUsers = cartUsers;
-    }
-
-    public Cart(Long newId, Long id, Map<Product, Integer> cart) {
-        super();
     }
 
     public Long getUserId() {

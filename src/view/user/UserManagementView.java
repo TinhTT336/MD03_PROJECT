@@ -27,9 +27,9 @@ public class UserManagementView {
         do {
             System.out.println(PURPLE + "+------------------------------------------------------------------------------------------------+");
             System.out.printf("|" + WHITE_BOLD_BRIGHT + "   TMESTICS   \uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84                                   Xin chào: %-28s\n", HomeView.userLogin.getFullName() + PURPLE + "                 |");
-            System.out.println("|------------------------------------------------------------------------------------------------|");
+            System.out.println("+------------------------------------------------------------------------------------------------+");
             System.out.println("|" + WHITE_BOLD_BRIGHT + "                                    \uD83D\uDC64 QUẢN LÝ TÀI KHOẢN                                        " + PURPLE + "|");
-            System.out.println("|------------------------------------------------------------------------------------------------|");
+            System.out.println("+------------------------------------------------------------------------------------------------+");
             System.out.println("|" + RESET + "                                 1. \uD83D\uDC41️ DANH SÁCH TÀI KHOẢN                                      " + PURPLE + "|");
             System.out.println("|" + RESET + "                                 2. ✏️ THAY ĐỔI TRẠNG THÁI                                      " + PURPLE + "|");
             System.out.println("|" + RESET + "                                 3. ✏️ SET QUYỀN                                                " + PURPLE + "|");
@@ -58,7 +58,7 @@ public class UserManagementView {
                 case 0:
                     return;
                 default:
-                    System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại" + RESET);
+                    System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
                     break;
             }
         } while (true);
@@ -67,7 +67,7 @@ public class UserManagementView {
     private void filterUser() {
         System.out.println("Lựa chọn trạng thái tài khoản muốn lọc: ");
         System.out.println(PURPLE + "+---------------------------------------------------------------------------------+");
-        System.out.println("|" + RESET + " 1. ĐANG HOẠT ĐÔNG           | 2. BỊ KHOÁ               | 0. QUAY LẠI            " + PURPLE+"|");
+        System.out.println("|" + WHITE_BRIGHT + " 1. ĐANG HOẠT ĐÔNG           | 2. BỊ KHOÁ               | 0. QUAY LẠI            " + PURPLE+"|");
         System.out.println(PURPLE + "+---------------------------------------------------------------------------------+" + RESET);
 
         System.out.println("Nhập lựa chọn: ");
@@ -83,7 +83,7 @@ public class UserManagementView {
             case 0:
                 return;
             default:
-                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại" + RESET);
+                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
                 break;
         }
     }
@@ -102,7 +102,7 @@ public class UserManagementView {
 
         if (count > 0) {
             showTLine();
-            System.out.println("Tìm thấy " + count + " tài khoản có tên " + "'" + name + "'");
+            System.out.println(PURPLE_BRIGHT+"Tìm thấy " + count + " tài khoản có tên " + "'" + name + "'"+RESET);
             System.out.println();
         } else {
             System.out.println("|" + RED + "  Không có tài khoản nào!!!" + RESET);
@@ -117,15 +117,9 @@ public class UserManagementView {
 
         User setRoleUser = userService.findById((long) setRoleId);
         if (setRoleUser == null) {
-            System.out.println("|" + RED + "  Không có tài khoản với mã vừa nhập !!!" + RESET);
+            System.out.println("|" + RED + "  Không có tài khoản với mã vừa nhập!!!" + RESET);
         } else {
             System.out.println("Thông tin người dùng muốn thay đổi Vai trò: ");
-//            System.out.println(+PURPLE+".---------------------------------------------------------------------------------------------------------------------------------.");
-//            System.out.println("|" + RESET + "  ID  |       TÊN NGƯỜI DÙNG       |    TÊN TÀI KHOẢN    |        EMAIL        |  SỐ ĐIỆN THOẠI  |    VAI TRÒ    |    TRẠNG THÁI " + PURPLE+"|");
-//            System.out.println("|---------------------------------------------------------------------------------------------------------------------------------|");
-//            System.out.printf(  "|"+RESET+" %-4d | %-25s  |    %-15s  | %-19s |    %-11s  | %-14s|    %-10s "+PURPLE+"|\n",
-//                    setRoleIdUser.getId(), setRoleIdUser.getFullName(), setRoleIdUser.getUsername(), setRoleIdUser.getEmail(), setRoleIdUser.getPhone(), setRoleIdUser.getRole().getRoleName(), (setRoleIdUser.isStatus() ? "Hoạt động" : "Bị khoá"));
-//            System.out.println(PURPLE + "'---------------------------------------------------------------------------------------------------------------------------------|' " + RESET);
             showUser(setRoleUser);
             int count = 1;
             if (setRoleUser.getRole().equals(Role.ADMIN)) {
@@ -148,7 +142,7 @@ public class UserManagementView {
                     } else {
                         setRoleUser.setRole(Role.ADMIN);
                         userService.save(setRoleUser);
-                        System.out.println("Đã thay đổi Vai trò người dùng!");
+                        System.out.println(PURPLE_BRIGHT+"Đã thay đổi Vai trò người dùng!"+RESET);
                     }
                 }
             }
@@ -171,7 +165,7 @@ public class UserManagementView {
             } else {
                 changeUser.setStatus(!changeUser.isStatus());
                 userService.save(changeUser);
-                System.out.println("Đã thay đổi trạng thái người dùng!");
+                System.out.println(PURPLE_BRIGHT+"Đã thay đổi trạng thái người dùng!"+RESET);
             }
         }
     }
@@ -192,8 +186,8 @@ public class UserManagementView {
     }
 
     private void showTHead() {
-        System.out.println(PURPLE + "+---------------------------------------------------------------------------------------------------------------------------------+");
-        System.out.println("|" + RESET + "  ID  |       TÊN NGƯỜI DÙNG       |    TÊN TÀI KHOẢN    |        EMAIL        |  SỐ ĐIỆN THOẠI  |    VAI TRÒ    |    TRẠNG THÁI " + PURPLE + "|");
+        showTLine();
+        System.out.println("|" + WHITE_BRIGHT + "  ID  |       TÊN NGƯỜI DÙNG       |    TÊN TÀI KHOẢN    |        EMAIL        |  SỐ ĐIỆN THOẠI  |    VAI TRÒ    |    TRẠNG THÁI " + PURPLE + "|");
         showTLine();
     }
 

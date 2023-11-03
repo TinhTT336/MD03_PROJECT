@@ -2,15 +2,6 @@ package config;
 
 public class Validation {
     public static int validateInt() {
-//        int n=-1;
-//        try {
-//            n = Integer.parseInt(Config.scanner().nextLine());
-//        } catch (NumberFormatException e) {
-//            System.out.println("Sai định dạng, vui lòng nhập lại");
-//            validateInt();
-//        }
-//        return n;
-//    }
         int n;
         while (true) {
             try {

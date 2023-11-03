@@ -12,7 +12,7 @@ public class StringFormatter {
     }
 
     public static String formatCurrency(double amount) {
-        DecimalFormat decimalFormat = new DecimalFormat("#,### ");
+        DecimalFormat decimalFormat = new DecimalFormat("#,### ₫");
         return decimalFormat.format(amount);
     }
 

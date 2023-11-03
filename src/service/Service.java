@@ -35,14 +35,14 @@ public class Service<T extends Entity, ID extends Number> {
     public Long getNewId() {
         List<T> list = findAll();
         Long maxId = 0L;
-//        if(list!=null){
+        if(list!=null){
             for (T t : list) {
                 if (t.getId()!=null&&(Long) t.getId() > maxId) {
                     maxId = (Long) t.getId();
                 }
-//            }
+            }
         }
-        return maxId + 1;
+        return (maxId + 1);
     }
 
     public boolean save(T t) {

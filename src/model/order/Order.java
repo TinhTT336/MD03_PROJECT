@@ -2,7 +2,6 @@ package model.order;
 
 import constant.OrderStatus;
 import model.Entity;
-import model.orderDetail.OrderDetail;
 import model.product.Product;
 
 import java.io.Serializable;
@@ -19,7 +18,6 @@ public class Order extends Entity<Long>implements Serializable {
     private String address;
     private double total;
     private OrderStatus orderStatus;
-    private List<OrderDetail> orderDetail;
     private Map<Product,Integer> ordersDetail;
     private LocalDateTime orderAt;
     private LocalDateTime deliverAt;
@@ -73,13 +71,8 @@ public class Order extends Entity<Long>implements Serializable {
         this.total = total;
     }
 
-    public List<OrderDetail> getOrderDetail() {
-        return orderDetail;
-    }
 
-    public void setOrderDetail(List<OrderDetail> orderDetail) {
-        this.orderDetail = orderDetail;
-    }
+
 
     public LocalDateTime getOrderAt() {
         return orderAt;
