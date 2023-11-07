@@ -3,11 +3,8 @@ package view.user;
 import config.Validation;
 import constant.FileName;
 import constant.Role;
-import model.product.Product;
 import model.user.User;
-import service.IService;
 import service.Service;
-import view.product.ProductView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,7 +114,7 @@ public class UserManagementView {
 
         User setRoleUser = userService.findById((long) setRoleId);
         if (setRoleUser == null) {
-            System.out.println("Không có tài khoản với mã vừa nhập!!!" + RESET);
+            System.out.println(RED+"Không có tài khoản với mã vừa nhập!!!" + RESET);
         } else {
             System.out.println("Thông tin người dùng muốn thay đổi Vai trò: ");
             showUser(setRoleUser);
@@ -159,7 +156,7 @@ public class UserManagementView {
             showUser(changeUser);
 
             if (changeUser.getRole().equals(Role.ADMIN)) {
-                System.out.println(RED + "Không được quyền thay đổi trạng thái tài khoàn ADMIN!!!" + RESET);
+                System.out.println(RED + "Không được quyền thay đổi trạng thái tài khoản ADMIN!!!" + RESET);
             } else {
                 changeUser.setStatus(!changeUser.isStatus());
                 userService.save(changeUser);

@@ -25,16 +25,8 @@ public class Cart extends Entity<Long> implements Serializable {
         return userId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-
     public Map<Product, Integer> getCartUsers() {
         return cartUsers;
     }
 
-    public void setCartUsers(Map<Product, Integer> cartUsers) {
-        this.cartUsers = cartUsers;
-    }
 }

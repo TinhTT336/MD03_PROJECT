@@ -99,8 +99,7 @@ public class OrderView {
 //            System.out.println(RED + "Không có đơn hàng với mã vừa nhập!!!" + RESET);
 //            return;
 //        }
-//        System.out.println(LocalDateTime.now());
-//        if (order.getOrderStatus().equals(OrderStatus.CONFIRM) && order.getDeliverAt().isEqual(LocalDateTime.now()) || LocalDateTime.now().isAfter(order.getDeliverAt())) {
+//        if (order.getDeliverAt().isEqual(LocalDateTime.now()) || LocalDateTime.now().isAfter(order.getDeliverAt())) {
 //            order.setOrderStatus(OrderStatus.DELIVERY);
 //            orderService.save(order);
 //            System.out.println(PURPLE_BRIGHT + "Đơn hàng " + order.getId() + " đang được giao!" + RESET);
@@ -114,7 +113,7 @@ public class OrderView {
                 orderService.save(order1);
                 System.out.println(PURPLE_BRIGHT + "Đơn hàng " + order1.getId() + " đang được giao!" + RESET);
             } else {
-                System.out.println(RED + "Trạng thái đơn hàng " + order1.getId() + " và thời gian giao hàng không phù hợp, vui lòng kiểm tra lại!!!" + RESET);
+                System.out.println(RED + "Trạng thái đơn hàng " + order1.getId() + " hoặc thời gian giao hàng không phù hợp, vui lòng kiểm tra lại!!!" + RESET);
             }
         }
     }
@@ -320,14 +319,14 @@ public class OrderView {
                     new ProductView().showTLine();
                     System.out.printf(PURPLE + "|" + WHITE_BOLD_BRIGHT + "      TỔNG TIỀN                                                                       |   %-14s     \n", StringFormatter.formatCurrency(orderDetail.getTotal()) + PURPLE + "                              |");
                     new ProductView().showTLine();
-                    if (HomeView.userLogin.getRole().equals(Role.USER) && orderDetail.getOrderStatus().equals(OrderStatus.DELIVERY)) {
-                        confirmOrderDelivered(orderDetail);
-                        return;
-                    }
-                    if (HomeView.userLogin.getRole().equals(Role.ADMIN) && orderDetail.getOrderStatus().equals(OrderStatus.CONFIRM) && orderDetail.getDeliverAt().isEqual(LocalDateTime.now()) || LocalDateTime.now().isBefore(orderDetail.getDeliverAt())) {
+                    if (orderDetail.getOrderStatus().equals(OrderStatus.CONFIRM) && orderDetail.getDeliverAt().isEqual(LocalDateTime.now()) ||orderDetail.getOrderStatus().equals(OrderStatus.CONFIRM) && LocalDateTime.now().isBefore(orderDetail.getDeliverAt())) {
                         orderDetail.setOrderStatus(OrderStatus.DELIVERY);
                         orderService.save(orderDetail);
                         System.out.println(PURPLE_BRIGHT + "Đơn hàng " + orderDetail.getId() + " đang được giao!" + RESET);
+                    }
+                    if (HomeView.userLogin.getRole().equals(Role.USER) && orderDetail.getOrderStatus().equals(OrderStatus.DELIVERY)) {
+                        confirmOrderDelivered(orderDetail);
+                        return;
                     }
                 }
                 break;
@@ -390,7 +389,7 @@ public class OrderView {
 
     public void showTHead() {
         new ProductView().showTLine();
-        System.out.println(PURPLE + "|" + WHITE_BRIGHT + " ID  |  NGÀY ĐẶT  | NGƯỜI ĐẶT HÀNG | NGƯỜI NHẬN HÀNG | SỐ ĐIỆN THOẠI | ĐỊA CHỈ GIAO HÀNG | TỔNG TIỀN  |  NGÀY NHẬN | TRẠNG THÁI  " + PURPLE + "|");
+        System.out.println(PURPLE + "|" + WHITE_BRIGHT + " ID  |  NGÀY ĐẶT  | NGƯỜI ĐẶT HÀNG | NGƯỜI NHẬN HÀNG | SỐ ĐIỆN THOẠI | ĐỊA CHỈ GIAO HÀNG | TỔNG TIỀN  | NGÀY GIAO  | TRẠNG THÁI  " + PURPLE + "|");
         new ProductView().showTLine();
     }
 

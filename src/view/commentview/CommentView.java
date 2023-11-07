@@ -24,7 +24,6 @@ public class CommentView {
 
     public void showComment(Product product) {
         List<Comment>productCommentList=  commentService.findAll().stream().filter(c->c.getProductId().equals(product.getId())).collect(Collectors.toList());
-
         if (productCommentList.isEmpty()) {
             System.out.println(WHITE_BRIGHT+"Sản phẩm "+product.getProductName()+" chưa có bình luận nào!"+RESET);
             return;

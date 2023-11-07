@@ -3,7 +3,6 @@ package model.category;
 import model.Entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Category extends Entity<Long>{
     private static final long serialVersionUID = 1L;
@@ -35,13 +34,4 @@ public class Category extends Entity<Long>{
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Category{" +
-                "categoryName='" + categoryName + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", id=" + id +
-                '}';
-    }
 }

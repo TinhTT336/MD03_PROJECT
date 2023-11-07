@@ -76,26 +76,33 @@ public class AccountView {
     }
 
     private void changePassword() {
+        System.out.println("Nhập mật khẩu hiện tại: ");
         while (true) {
-            System.out.println("Nhập mật khẩu hiện tại: ");
             String oldPass = Validation.validatePassword();
             if (!oldPass.equals(HomeView.userLogin.getPassword())) {
                 System.out.println(RED + "Mật khẩu không chính xác, vui lòng kiểm tra lại!!!" + RESET);
             } else {
-                System.out.println("Nhập mật khẩu muốn thay đổi: ");
-                String newPass = Validation.validatePassword();
-                if (newPass.equals(oldPass)) {
-                    System.out.println(RED + "Mật khẩu mới không được trùng với mật khẩu trước đó!!!" + RESET);
-                } else {
-                    System.out.println("Xác nhận lại mật khẩu: ");
-                    String rePass = Validation.validatePassword();
-                    if (!newPass.equals(rePass)) {
-                        System.out.println(RED + "Mật khẩu không khớp, vui lòng kiểm tra lại!!!" + RESET);
-                    } else {
-                        HomeView.userLogin.setPassword(newPass);
-                        break;
-                    }
-                }
+                break;
+            }
+        }
+        System.out.println("Nhập mật khẩu muốn thay đổi: ");
+        String newPass;
+        while (true) {
+            newPass = Validation.validatePassword();
+            if (newPass.equals(HomeView.userLogin.getPassword())) {
+                System.out.println(RED + "Mật khẩu mới không được trùng với mật khẩu trước đó!!!" + RESET);
+            } else {
+                break;
+            }
+        }
+        while (true) {
+            System.out.println("Xác nhận lại mật khẩu: ");
+            String rePass = Validation.validatePassword();
+            if (!newPass.equals(rePass)) {
+                System.out.println(RED + "Mật khẩu không khớp, vui lòng kiểm tra lại!!!" + RESET);
+            } else {
+                HomeView.userLogin.setPassword(newPass);
+                break;
             }
         }
         loginService.saveOne(HomeView.userLogin);

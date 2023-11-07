@@ -7,7 +7,6 @@ import model.category.Category;
 import model.comment.Comment;
 import model.like.Like;
 import model.product.Product;
-import model.user.User;
 import service.Service;
 import service.productService.ProductService;
 import view.category.CategoryView;
@@ -25,13 +24,11 @@ import static config.Color.*;
 public class ProductView {
     private Service<Product, Long> productService;
     private Service<Category, Long> categoryService;
-    private Service<Comment, Long> commentService;
     private Service<Like, Long> likeService;
 
     public ProductView() {
         this.productService = new Service<>(FileName.PRODUCT);
         this.categoryService = new Service<>(FileName.CATEGORY);
-        this.commentService = new Service<>(FileName.COMMENT);
         this.likeService = new Service<>(FileName.LIKE);
     }
 
@@ -276,6 +273,9 @@ public class ProductView {
                 System.out.println(RED + "Tồn kho sản phẩm phải lớn hơn 0!!!" + RESET);
             } else {
                 newProduct.setStock(stock);
+                if(newProduct.getStock()==0){
+                    newProduct.setStatus(false);
+                }
                 break;
             }
         }
@@ -491,18 +491,8 @@ public class ProductView {
         }
     }
 
-    static int countComment;
 
     private void likeAndCommentAndBuyProduct(Product product) {
-//        if (product.getComment() == null || product.getComment().isEmpty()) {
-//            product.setComment(new HashMap<>());
-//        }
-//        countComment = product.getComment().size();
-//        if (product.getCountLikes() == null) {
-//            product.setCountLikes(0);
-//        }
-
-        List<Comment> productCommentList = commentService.findAll().stream().filter(c -> c.getProductId().equals(product.getId())).collect(Collectors.toList());
         List<Like> productLikeList;
         if (likeService.findAll().isEmpty() || likeService.findAll() == null) {
             productLikeList = new ArrayList<>();
@@ -512,14 +502,14 @@ public class ProductView {
         System.out.println();
 
         System.out.println("Các chức năng để lựa chọn: ");
-        System.out.println(PURPLE + "+------------------------------------------------------------------------------------------------------------+");
+        System.out.println(PURPLE+"+-------------------------------------------------------------------------------------------------+" + RESET);
         if (new LikeView().findLikeById(productLikeList, HomeView.userLogin)!=null) {
-            System.out.printf("|%s   1. UNLIKE SẢN PHẨM (%2d )  |    2. BÌNH LUẬN (%2d )     |    3. THÊM VÀO GIỎ HÀNG    |    0. QUAY LẠI      %s|\n", WHITE_BRIGHT, productLikeList.size(), productCommentList.size(), PURPLE);
+            System.out.println(PURPLE+"|"+WHITE_BRIGHT+"   1. UNLIKE SẢN PHẨM   |    2. BÌNH LUẬN      |    3. THÊM VÀO GIỎ HÀNG    |    0. QUAY LẠI      "+PURPLE+"|"+RESET );
         } else {
-            System.out.printf("|%s   1. LIKE SẢN PHẨM (%2d )    |    2. BÌNH LUẬN (%2d )     |    3. THÊM VÀO GIỎ HÀNG    |    0. QUAY LẠI      %s|\n", WHITE_BRIGHT, productLikeList.size(), productCommentList.size(), PURPLE);
+            System.out.println(PURPLE+"|"+WHITE_BRIGHT+"   1. LIKE SẢN PHẨM     |    2. BÌNH LUẬN      |    3. THÊM VÀO GIỎ HÀNG   |    0. QUAY LẠI      "+PURPLE+"|" +RESET);
 
         }
-        System.out.println("+------------------------------------------------------------------------------------------------------------+" + RESET);
+        System.out.println(PURPLE+"+-------------------------------------------------------------------------------------------------+" + RESET);
         System.out.println("Nhập lựa chọn: ");
         switch (Validation.validateInt()) {
             case 1:
@@ -561,8 +551,8 @@ public class ProductView {
     }
 
     public void showTBody(Product product) {
-        System.out.printf(PURPLE + "|" + RESET + " %-4d| %-35.35s| %-11s| %-35.35s|   %-10s |     %-4d| %-10s" + PURPLE + "|\n",
-                product.getId(), product.getProductName(), product.getCategory().getCategoryName(), product.getDescription(), StringFormatter.formatCurrency(product.getUnitPrice()), product.getStock(), (product.isStatus() ? "Còn hàng" : "Hết hàng"));
+        System.out.printf(PURPLE + "|" + RESET + " %-4d| %-35.35s| %-11s| %-35.35s|  %-11s |   %-4d  | %-10s" + PURPLE + "|\n",
+                product.getId(), product.getProductName(), product.getCategory().getCategoryName(), product.getDescription(), StringFormatter.formatCurrency(product.getUnitPrice()), product.getStock(), (product.isStatus() ? "Còn hàng": "Hết hàng"));
     }
 
     public void showTLine() {

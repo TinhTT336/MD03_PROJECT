@@ -66,7 +66,7 @@ public class ProductService implements IService<Product, Long> {
     public List<Product> searchTrueProductByCatID(int id) {
         List<Product> productList = new ArrayList<>();
         for (Product product : productService.findAll()) {
-            if (product.isStatus() && product.getCategory().isStatus()) {
+            if (product.isStatus() && product.getCategory().isStatus()&&product.getStock()>0) {
                 if (product.getCategory().getId() == id) {
                     productList.add(product);
                 }

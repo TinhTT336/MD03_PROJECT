@@ -14,7 +14,6 @@ import view.category.CategoryView;
 import view.product.ProductView;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static config.Color.*;
 
@@ -30,7 +29,6 @@ public class HomeView {
 
     UserService userService = new UserService();
     public static User userLogin;
-    //    public static Map<Product, Integer> cart = new HashMap<>();
     public static Cart userCart;
 
 
@@ -168,23 +166,23 @@ public class HomeView {
     public void checkRole(User user) {
         if (!user.isStatus()) {
             System.out.println(RED + "Tài khoản bị khoá, vui lòng liên hệ ADMIN!!!" + RESET);
+            return;
+        }
+        if (user.getRole().equals(Role.ADMIN)) {
+            userLogin = user;
+            new Config<User>().writeFile(FileName.LOGIN, userLogin);
+            new AdminView().showMenuAdmin();
         } else {
-            if (user.getRole().equals(Role.ADMIN)) {
+            if (user.getRole().equals(Role.USER)) {
                 userLogin = user;
-                new Config<User>().writeFile(FileName.LOGIN, userLogin);
-                new AdminView().showMenuAdmin();
-            } else {
-                if (user.getRole().equals(Role.USER)) {
-                    userLogin = user;
-                    userCart = new CartService().getCartByUserLogin(userLogin);
-                    if (userCart == null) {
-                        userCart = new Cart(new CartService().getNewId(), HomeView.userLogin.getId(), new HashMap<>());
-                    }
-                    new Config<User>().writeFile(FileName.LOGIN, userLogin);
-                    new UserView().showMenuUser();
+                userCart = new CartService().getCartByUserLogin(userLogin);
+                if (userCart == null) {
+                    userCart = new Cart(new CartService().getNewId(), HomeView.userLogin.getId(), new HashMap<>());
                 }
+                new Config<User>().writeFile(FileName.LOGIN, userLogin);
+                new UserView().showMenuUser();
             }
         }
     }
-
 }
+
