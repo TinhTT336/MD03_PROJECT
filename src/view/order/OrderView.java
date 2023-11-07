@@ -4,6 +4,7 @@ import config.StringFormatter;
 import config.Validation;
 import constant.FileName;
 import constant.OrderStatus;
+import constant.Role;
 import model.order.Order;
 import model.product.Product;
 import model.user.User;
@@ -80,19 +81,40 @@ public class OrderView {
     }
 
     private void updateOrderToDelivery() {
-        System.out.println("Nhập mã đơn hàng muốn xác nhận giao hàng: ");
-        int confirmOrderId = Validation.validateInt();
+        System.out.println(WHITE_BOLD_BRIGHT + "DANH SÁCH ĐƠN HÀNG ĐÃ XÁC NHẬN: " + RESET);
+        showOrderList(getOrdersByStatus(OrderStatus.CONFIRM));
 
-        Order order = orderService.findById((long) confirmOrderId);
-        if (order == null) {
-            System.out.println(RED + "Không có đơn hàng với mã vừa nhập!!!" + RESET);
-        } else {
-            if (order.getOrderStatus().equals(OrderStatus.CONFIRM) && order.getDeliverAt().equals(LocalDateTime.now())) {
-                order.setOrderStatus(OrderStatus.DELIVERY);
-                orderService.save(order);
-                System.out.println(PURPLE_BRIGHT + "Đơn hàng đang được giao!" + RESET);
+//        System.out.println(PURPLE + "                                              +--------------------+" + RESET);
+//        System.out.println("Nhập mã đơn hàng muốn kiểm tra/ hoặc chọn:    " + PURPLE + "|" + WHITE_BRIGHT + "    0. QUAY LẠI     " + PURPLE + "|");
+//        System.out.println(PURPLE + "                                              +--------------------+" + RESET);
+//
+//        int confirmOrderId = Validation.validateInt();
+//        Order order = orderService.findById((long) confirmOrderId);
+//        if (order == null) {
+//            System.out.println(RED + "Không có đơn hàng với mã vừa nhập!!!" + RESET);
+//            return;
+//        }
+//
+//        if (findOrder(order, getOrdersByStatus(OrderStatus.CONFIRM))) {
+//            System.out.println(RED + "Không có đơn hàng với mã vừa nhập!!!" + RESET);
+//            return;
+//        }
+//        System.out.println(LocalDateTime.now());
+//        if (order.getOrderStatus().equals(OrderStatus.CONFIRM) && order.getDeliverAt().isEqual(LocalDateTime.now()) || LocalDateTime.now().isAfter(order.getDeliverAt())) {
+//            order.setOrderStatus(OrderStatus.DELIVERY);
+//            orderService.save(order);
+//            System.out.println(PURPLE_BRIGHT + "Đơn hàng " + order.getId() + " đang được giao!" + RESET);
+//        } else {
+//            System.out.println(RED + "Trạng thái đơn hàng " + order.getId() + " và thời gian giao hàng không phù hợp, vui lòng kiểm tra lại!!!" + RESET);
+//        }
+
+        for (Order order1 : getOrdersByStatus(OrderStatus.CONFIRM)) {
+            if (order1.getDeliverAt().isEqual(LocalDateTime.now()) || LocalDateTime.now().isAfter(order1.getDeliverAt())) {
+                order1.setOrderStatus(OrderStatus.DELIVERY);
+                orderService.save(order1);
+                System.out.println(PURPLE_BRIGHT + "Đơn hàng " + order1.getId() + " đang được giao!" + RESET);
             } else {
-                System.out.println(RED + "Trạng thái đơn hàng và thời gian giao hàng không phù hợp, vui lòng kiểm tra lại!!!" + RESET);
+                System.out.println(RED + "Trạng thái đơn hàng " + order1.getId() + " và thời gian giao hàng không phù hợp, vui lòng kiểm tra lại!!!" + RESET);
             }
         }
     }
@@ -120,7 +142,6 @@ public class OrderView {
         System.out.println(PURPLE + "                                                                 +--------------------+" + RESET);
         System.out.println("Nhập lựa chọn để hiển thị danh sách đơn hàng theo trạng thái:    " + PURPLE + "|" + WHITE_BRIGHT + "    0. QUAY LẠI     " + PURPLE + "|");
         System.out.println(PURPLE + "                                                                 +--------------------+" + RESET);
-
         switch (Validation.validateInt()) {
             case 1:
                 System.out.println(WHITE_BOLD_BRIGHT + "DANH SÁCH ĐƠN HÀNG CHỜ XÁC NHẬN: " + RESET);
@@ -187,9 +208,14 @@ public class OrderView {
         List<Order> waitingOrder = getOrdersByStatus(OrderStatus.WAITING);
         System.out.println(WHITE_BOLD_BRIGHT + "DANH SÁCH ĐƠN HÀNG CHỜ XÁC NHẬN: " + RESET);
         showOrderList(waitingOrder);
-        System.out.println("Nhập mã đơn hàng muốn xác nhận: ");
-        int confirmOrderId = Validation.validateInt();
+        System.out.println(PURPLE + "                                              +--------------------+" + RESET);
+        System.out.println("Nhập mã đơn hàng muốn xác nhận/ hoặc chọn:    " + PURPLE + "|" + WHITE_BRIGHT + "    0. QUAY LẠI     " + PURPLE + "|");
+        System.out.println(PURPLE + "                                              +--------------------+" + RESET);
 
+        int confirmOrderId = Validation.validateInt();
+        if (confirmOrderId == 0) {
+            return;
+        }
         Order confirmOrder = orderService.findById((long) confirmOrderId);
         if (confirmOrder == null) {
             System.out.println(RED + "Không có đơn hàng với mã vừa nhập!!!" + RESET);
@@ -212,8 +238,14 @@ public class OrderView {
         System.out.println(WHITE_BOLD_BRIGHT + "DANH SÁCH ĐƠN HÀNG CÓ THỂ HUỶ: " + RESET);
         showOrderList(cancelOrders);
 
-        System.out.println("Nhập mã đơn hàng muốn huỷ: ");
+        System.out.println(PURPLE + "                                              +--------------------+" + RESET);
+        System.out.println("Nhập mã đơn hàng muốn huỷ/ hoặc chọn:         " + PURPLE + "|" + WHITE_BRIGHT + "    0. QUAY LẠI     " + PURPLE + "|");
+        System.out.println(PURPLE + "                                              +--------------------+" + RESET);
+
         int calOrderId = Validation.validateInt();
+        if (calOrderId == 0) {
+            return;
+        }
         Order calOrder = orderService.findById((long) calOrderId);
 
         if (calOrder == null) {
@@ -234,7 +266,7 @@ public class OrderView {
                     System.out.println(PURPLE_BRIGHT + "Đã huỷ đơn hàng!" + RESET);
                     orderService.save(calOrder);
 
-                    //tru so luong da mua hang trong ProductList
+                    //cong so luong da mua hang trong ProductList
                     for (Map.Entry<Product, Integer> entry : calOrder.getOrdersDetail().entrySet()) {
                         for (Product product : productService.findAll()) {
                             if (entry.getKey().equals(product)) {
@@ -257,7 +289,7 @@ public class OrderView {
     }
 
 
-    private void showOrderDetail() {
+    public void showOrderDetail() {
         System.out.println("Các chức năng để lựa chọn: ");
         System.out.println(PURPLE + "+--------------------------------------------------------+");
         System.out.println("|" + WHITE_BRIGHT + " 1. XEM CHI TIẾT ĐƠN HÀNG    |    0. QUAY LẠI           " + PURPLE + "|");
@@ -267,7 +299,6 @@ public class OrderView {
             case 1:
                 System.out.println("Nhâp mã đơn hàng muốn xem chi tiết");
                 int orderId = Validation.validateInt();
-
                 Order orderDetail = orderService.findById((long) orderId);
 
                 if (orderDetail == null) {
@@ -278,19 +309,26 @@ public class OrderView {
                     System.out.printf(" ID Hoá đơn               :  %-24s  \n", orderDetail.getId());
                     System.out.printf(" Người đặt hàng           :  %-24s  |  Người nhận hàng      :  %-24s  \n", userService.findById(orderDetail.getUserId()).getFullName(), orderDetail.getName());
                     System.out.printf(" Số điện thoại nhận hàng  :  %-24s  |  Địa chỉ giao hàng    :  %-24s  \n", orderDetail.getPhoneNumber(), orderDetail.getAddress());
-                    System.out.printf(" Tổng giá trị đơn hàng    :  %-24s  |  Trạng thái đơn hàng  :  %-24s  \n", StringFormatter.formatCurrency(orderDetail.getTotal()), orderDetail.getOrderStatus());
+                    System.out.printf(" Tổng giá trị đơn hàng    :  %-24s  |  Trạng thái đơn hàng  :  %-24s  \n", StringFormatter.formatCurrency(orderDetail.getTotal()), changeOrderStatusColor(orderDetail.getOrderStatus()));
                     System.out.printf(" Ngày đặt hàng            :  %-24s  |  Ngày giao hàng       :  %-24s  \n", StringFormatter.getCurrentYearMonth(orderDetail.getOrderAt()), StringFormatter.getCurrentYearMonth(orderDetail.getDeliverAt()));
-
                     new ProductView().showTLine();
-                    System.out.println(PURPLE + "|" + RESET + "  ID |                TÊN                 |  DANH MỤC  |                MÔ TẢ             | ĐƠN GIÁ(VND) | SỐ LƯỢNG | TRẠNG THÁI" + PURPLE + " |");
+                    System.out.println(PURPLE + "|" + WHITE_BRIGHT + "  ID |                TÊN                 |  DANH MỤC  |              MÔ TẢ           | ĐƠN GIÁ(VND) | SỐ LƯỢNG |  THÀNH TIỀN   " + PURPLE + " |");
                     new ProductView().showTLine();
                     for (Product key : orderDetail.getOrdersDetail().keySet()) {
-                        System.out.printf(PURPLE + "|" + RESET + " %-4d| %-35s| %-11s| %-33s|   %-10s |     %-4d | %-10s " + PURPLE + "|\n",
-                                key.getId(), key.getProductName(), key.getCategory().getCategoryName(), key.getDescription(), StringFormatter.formatCurrency(key.getUnitPrice()), orderDetail.getOrdersDetail().get(key), StringFormatter.formatCurrency(key.getUnitPrice() * orderDetail.getOrdersDetail().get(key)));
+                        System.out.printf(PURPLE + "|" + RESET + " %-4d| %-35s| %-11s| %-29s|   %-10s |     %-4d | %-14s " + PURPLE + "|\n", key.getId(), key.getProductName(), key.getCategory().getCategoryName(), key.getDescription(), StringFormatter.formatCurrency(key.getUnitPrice()), orderDetail.getOrdersDetail().get(key), StringFormatter.formatCurrency(key.getUnitPrice() * orderDetail.getOrdersDetail().get(key)));
                     }
                     new ProductView().showTLine();
-                    System.out.printf(PURPLE + "|" + WHITE_BOLD_BRIGHT + "      TỔNG TIỀN                                                                           |   %-12s   \n", StringFormatter.formatCurrency(orderDetail.getTotal()) + PURPLE + "                            |");
+                    System.out.printf(PURPLE + "|" + WHITE_BOLD_BRIGHT + "      TỔNG TIỀN                                                                       |   %-14s     \n", StringFormatter.formatCurrency(orderDetail.getTotal()) + PURPLE + "                              |");
                     new ProductView().showTLine();
+                    if (HomeView.userLogin.getRole().equals(Role.USER) && orderDetail.getOrderStatus().equals(OrderStatus.DELIVERY)) {
+                        confirmOrderDelivered(orderDetail);
+                        return;
+                    }
+                    if (HomeView.userLogin.getRole().equals(Role.ADMIN) && orderDetail.getOrderStatus().equals(OrderStatus.CONFIRM) && orderDetail.getDeliverAt().isEqual(LocalDateTime.now()) || LocalDateTime.now().isBefore(orderDetail.getDeliverAt())) {
+                        orderDetail.setOrderStatus(OrderStatus.DELIVERY);
+                        orderService.save(orderDetail);
+                        System.out.println(PURPLE_BRIGHT + "Đơn hàng " + orderDetail.getId() + " đang được giao!" + RESET);
+                    }
                 }
                 break;
             case 0:
@@ -301,7 +339,27 @@ public class OrderView {
         }
     }
 
-    private void showOrderList(List<Order> orderList) {
+    private void confirmOrderDelivered(Order order) {
+        System.out.println("Bạn đã nhận được đơn hàng? ");
+        System.out.println(PURPLE + "+--------------------------------------------------------+");
+        System.out.println("|" + WHITE_BRIGHT + "      1. ĐÃ NHẬN HÀNG        |    0. QUAY LẠI           " + PURPLE + "|");
+        System.out.println("+--------------------------------------------------------+" + RESET);
+        System.out.println("Nhập lựa chọn: ");
+        switch (Validation.validateInt()) {
+            case 1:
+                order.setOrderStatus(OrderStatus.SUCCESS);
+                System.out.println(PURPLE_BRIGHT + "Cảm ơn bạn đã xác nhận đơn hàng!" + RESET);
+                orderService.save(order);
+                break;
+            case 0:
+                return;
+            default:
+                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
+                break;
+        }
+    }
+
+    public void showOrderList(List<Order> orderList) {
 //        System.out.println(WHITE_BOLD_BRIGHT + "\nDANH SÁCH ĐƠN HÀNG                        " + RESET);
         showTHead();
         if (orderList.isEmpty()) {
@@ -312,21 +370,22 @@ public class OrderView {
             }
         }
         new ProductView().showTLine();
+
     }
 
-    public void showUserLoginOrder() {
-        System.out.println(WHITE_BOLD_BRIGHT + "\nDANH SÁCH ĐƠN HÀNG                        " + RESET);
-        List<Order> orderUserLogin = orderService.findAll().stream().filter(o -> o.getUserId().equals(HomeView.userLogin.getId())).sorted((o1,o2)->(o2.getOrderAt().compareTo(o1.getOrderAt()))).collect(Collectors.toList());
-
-        if (orderUserLogin.isEmpty()) {
-            showTHead();
-            System.out.println(PURPLE + "|" + RED + " Không có đơn hàng nào!!!" + RESET);
-            new ProductView().showTLine();
-        } else {
-            showOrderList(orderUserLogin);
-            showOrderDetail();
+    public String changeOrderStatusColor(OrderStatus orderStatus) {
+        if (orderStatus.equals(OrderStatus.WAITING)) {
+            return WHITE + "CHỜ XÁC NHẬN" + RESET;
+        } else if (orderStatus.equals(OrderStatus.CONFIRM)) {
+            return YELLOW_BRIGHT + "ĐÃ XÁC NHẬN" + RESET;
+        } else if (orderStatus.equals(OrderStatus.CANCEL)) {
+            return RED + "BỊ HUỶ" + RESET;
+        } else if (orderStatus.equals(OrderStatus.DELIVERY)) {
+            return CYAN_BRIGHT + "ĐANG GIAO" + RESET;
+        } else if (orderStatus.equals(OrderStatus.SUCCESS)) {
+            return PURPLE_BRIGHT + "THÀNH CÔNG" + RESET;
         }
-
+        return null;
     }
 
     public void showTHead() {
@@ -336,7 +395,6 @@ public class OrderView {
     }
 
     public void showTBody(Order order) {
-        System.out.printf(PURPLE + "|" + RESET + " %-4d| %-10s | %-15s| %-15s |  %-11s  | %-18s| %-11s| %-10s | %-12s" + PURPLE + "|\n",
-                order.getId(), StringFormatter.getCurrentYearMonth(order.getOrderAt()), userService.findById(order.getUserId()).getFullName(), order.getName(), order.getPhoneNumber(), order.getAddress(), StringFormatter.formatCurrency(order.getTotal()), StringFormatter.getCurrentYearMonth(order.getDeliverAt()), order.getOrderStatus());
+        System.out.printf(PURPLE + "|" + RESET + " %-4d| %-10s | %-15s| %-15s |  %-11s  | %-18s| %-11s| %-10s | %-23s" + PURPLE + "|\n", order.getId(), StringFormatter.getCurrentYearMonth(order.getOrderAt()), userService.findById(order.getUserId()).getFullName(), order.getName(), order.getPhoneNumber(), order.getAddress(), StringFormatter.formatCurrency(order.getTotal()), StringFormatter.getCurrentYearMonth(order.getDeliverAt()), changeOrderStatusColor(order.getOrderStatus()));
     }
 }

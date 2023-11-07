@@ -117,15 +117,13 @@ public class UserManagementView {
 
         User setRoleUser = userService.findById((long) setRoleId);
         if (setRoleUser == null) {
-            System.out.println("|" + RED + "  Không có tài khoản với mã vừa nhập!!!" + RESET);
+            System.out.println("Không có tài khoản với mã vừa nhập!!!" + RESET);
         } else {
             System.out.println("Thông tin người dùng muốn thay đổi Vai trò: ");
             showUser(setRoleUser);
-            int count = 1;
             if (setRoleUser.getRole().equals(Role.ADMIN)) {
 //                setRoleIdUser.setRole(Role.USER);
 //                userService.save(setRoleIdUser);
-
                 System.out.println(RED + "Không được quyền thay đổi tài khoản ADMIN !!!" + RESET);
             } else {
                 if (!setRoleUser.isStatus()) {
@@ -155,7 +153,7 @@ public class UserManagementView {
 
         User changeUser = userService.findById((long) changeId);
         if (changeUser == null) {
-            System.out.println("|" + RED + "  Không có tài khoản với mã vừa nhập !!!" + RESET);
+            System.out.println(RED + "Không có tài khoản với mã vừa nhập !!!" + RESET);
         } else {
             System.out.println("Thông tin người dùng muốn thay đổi trạng thái: ");
             showUser(changeUser);

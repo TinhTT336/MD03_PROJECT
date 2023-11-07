@@ -26,13 +26,6 @@ public class UserView {
     private Service<Cart, Long> cartService;
     private Service<Order, Long> orderService;
     private Service<Category, Long> categoryService;
-//    public static Cart HomeView.userCart=HomeView.HomeView.userCart;
-    public static Map<Product, Integer> cart = new HashMap<>();
-
-    //    public static Cart currentCart = new CartService().getCurrentCartUser();
-//    static Cart HomeView.userCart = (new CartService().getCurrentCartUser() != null && new CartService().getCurrentCartUser().getUserId().equals(HomeView.userLogin.getId()) ? new CartService().getCurrentCartUser() : new Cart(new CartService().getNewId(),HomeView.userLogin.getId(), new HashMap<>()));
-//    Cart HomeView.userCart;
-
 
     public UserView() {
         this.productService = new Service<>(FileName.PRODUCT);
@@ -41,16 +34,6 @@ public class UserView {
         this.orderService = new Service<>(FileName.ORDER);
         this.categoryService = new Service<>(FileName.CATEGORY);
     }
-//    static Cart HomeView.userCart = new CartService().getCartByUserLogin(HomeView.userLogin);
-//    static {
-//        if(HomeView.userCart==null){
-//            HomeView.userCart = new Cart();
-//            HomeView.userCart.setId(new CartService().getNewId());
-//            HomeView.userCart.setUserId(HomeView.userLogin.getId());
-//            HomeView.userCart.setCartUsers(new HashMap<>());
-//        }
-//    }
-//    static Cart HomeView.userCart=HomeView.HomeView.userCart;
 
     public void showMenuUser() {
         do {
@@ -125,7 +108,7 @@ public class UserView {
     private void handlePayment() {
         System.out.println("Các chức năng để lựa chọn: ");
         System.out.println(PURPLE + "+---------------------------------------------------------------------------------------------------------------------+");
-        System.out.println("|" + WHITE_BRIGHT + "  1. TIẾP TỤC MUA HÀNG  |  2. THAY ĐỔI SỐ LƯỢNG SẢN PHẨM   |  3. XOÁ SẢN PHẨM    |  4. THANH TOÁN    | 0. QUAY LẠI   " + PURPLE + "|");
+        System.out.println("|" + WHITE_BRIGHT + "  1. TIẾP TỤC MUA HÀNG  |  2. THAY ĐỔI SỐ LƯỢNG SẢN PHẨM   |  3. XOÁ SẢN PHẨM    |  4. ĐẶT HÀNG    |  0. QUAY LẠI    " + PURPLE + "|");
         System.out.println(PURPLE + "+---------------------------------------------------------------------------------------------------------------------+" + RESET);
         System.out.println("Nhập lựa chọn: ");
 
@@ -151,11 +134,16 @@ public class UserView {
                 order.setAddress(Validation.validateString());
                 order.setOrderStatus(OrderStatus.WAITING);
                 order.setOrderAt(LocalDateTime.now());
-                order.setDeliverAt(order.getOrderAt().plusDays(4));
+                order.setDeliverAt(order.getOrderAt().plusDays(1));
 
                 //check so luong mua hang con ton kho khong//tru so luong da mua hang trong ProductList
                 for (Map.Entry<Product, Integer> entry : HomeView.userCart.getCartUsers().entrySet()) {
                     for (Product product : productService.findAll()) {
+                        if(!product.isStatus()||!product.getCategory().isStatus()||product.getStock()==0){
+                            System.out.println(RED + "Sản phẩm đang hết hàng, vui lòng kiểm tra lại!!!" + RESET);
+                            showCartUser();
+                            break;
+                        }
                         if (entry.getKey().equals(product)) {
                             if (entry.getValue() > product.getStock()) {
                                 System.out.println(RED + "Số lượng vượt quá tồn kho, vui lòng kiểm tra lại!!!" + RESET);
@@ -171,16 +159,12 @@ public class UserView {
                         }
                     }
                 }
-
                 order.setOrdersDetail(HomeView.userCart.getCartUsers());
                 order.setTotal(getTotal());
 
                 orderService.save(order);
-//                cartService.saveOne(null);
-//                HomeView.userCart = null;
                 HomeView.userCart.getCartUsers().clear();
                 cartService.save(HomeView.userCart);
-
                 System.out.println(PURPLE_BRIGHT + "Đặt hàng thành công!" + RESET);
                 break;
             case 0:
@@ -204,15 +188,16 @@ public class UserView {
             int quantity = Validation.validateInt();
             if (quantity > changedPro.getStock()) {
                 System.out.println(RED + "Số lượng vượt quá tồn kho, vui lòng kiểm tra lại!!!" + RESET);
-            } else if (quantity <= 0) {
+            } else if (quantity == 0) {
+                System.out.println(PURPLE_BRIGHT + "Thay đổi số lượng sản phẩm " + changedPro.getProductName() + " bằng 0, đã xoá khỏi giỏ hàng!" + RESET);
                 HomeView.userCart.getCartUsers().remove(changedPro);
+                cartService.save(HomeView.userCart);
                 break;
             } else {
                 for (Map.Entry<Product, Integer> entry : HomeView.userCart.getCartUsers().entrySet()) {
                     if (entry.getKey().equals(changedPro)) {
                         entry.setValue(quantity);
                         System.out.println(PURPLE_BRIGHT + "Đã thay đổi số lượng sản phẩm " + changedPro.getProductName() + " !" + RESET);
-//                        cartService.saveOne(HomeView.userCart);
                         cartService.save(HomeView.userCart);
                         return;
                     }
@@ -229,15 +214,14 @@ public class UserView {
             System.out.println(RED + "Không có sản phẩm với mã vừa nhập!!!" + RESET);
         } else {
             HomeView.userCart.getCartUsers().remove(deletePro);
-//            cartService.saveOne(HomeView.userCart);
             cartService.save(HomeView.userCart);
-            System.out.println(PURPLE_BRIGHT + "Đã xoá sản phẩm " + deletePro.getProductName() + " !" + RESET);
+            System.out.println(PURPLE_BRIGHT + "Đã xoá sản phẩm " + deletePro.getProductName() + " khỏi giỏ hàng!" + RESET);
         }
     }
 
     private void showCartUser() {
         double total = 0;
-        System.out.println(PURPLE + "+---------------------------------------------------------------------------------------------------------------------------------+ " + RESET);
+        new ProductView().showTLine();
         System.out.println(PURPLE + "|" + WHITE_BRIGHT + "  ID |                TÊN                 |  DANH MỤC  |               MÔ TẢ              | ĐƠN GIÁ(VND) | SỐ LƯỢNG | THÀNH TIỀN " + PURPLE + "|");
         new ProductView().showTLine();
         if (HomeView.userCart == null || HomeView.userCart.getCartUsers() == null || HomeView.userCart.getCartUsers().isEmpty()) {
@@ -249,7 +233,7 @@ public class UserView {
                 total += key.getUnitPrice() * HomeView.userCart.getCartUsers().get(key);
             }
             new ProductView().showTLine();
-            System.out.printf(PURPLE + "|" + WHITE_BOLD_BRIGHT + "      TỔNG TIỀN                                                                           |   %-12s   \n", StringFormatter.formatCurrency(total) + PURPLE + "                            |");
+            System.out.printf(PURPLE + "|" + WHITE_BOLD_BRIGHT + "      TỔNG TIỀN                                                                           |   %-12s   \n", StringFormatter.formatCurrency(total) + PURPLE + "                          |");
         }
         new ProductView().showTLine();
     }
@@ -257,8 +241,7 @@ public class UserView {
     private double getTotal() {
         double total = 0;
         if (HomeView.userCart == null || HomeView.userCart.getCartUsers() == null || HomeView.userCart.getCartUsers().isEmpty()) {
-//            System.out.println(PURPLE + "|" + RED + " Chưa có sản phẩm nào !!!" + RESET);
-            System.out.println();
+            total=0;
         } else {
             for (Product key : HomeView.userCart.getCartUsers().keySet()) {
                 total += key.getUnitPrice() * HomeView.userCart.getCartUsers().get(key);
@@ -270,7 +253,7 @@ public class UserView {
 
     public void showFeaturedProduct() {
 //        List<Product> featuredProduct = productService.findAll().stream().sorted(Comparator.comparing(Product::getUnitPrice).reversed()).limit(10).collect(Collectors.toList());
-        List<Product> featuredProduct = productService.findAll().stream().sorted((p1, p2) -> (int) -(p1.getUnitPrice() - p2.getUnitPrice())).limit(10).collect(Collectors.toList());
+        List<Product> featuredProduct = productService.findAll().stream().sorted((p1, p2) -> (int) -(p1.getUnitPrice() - p2.getUnitPrice())).limit(5).collect(Collectors.toList());
         new ProductView().showTrueProduct(featuredProduct);
     }
 
@@ -291,7 +274,7 @@ public class UserView {
                 return;
             }
 
-            if (!buyProduct.isStatus() && !buyProduct.getCategory().isStatus()) {
+            if (!buyProduct.isStatus() || !buyProduct.getCategory().isStatus()||buyProduct.getStock()==0) {
                 System.out.println(RED + "Sản phẩm đang hết hàng, vui lòng chọn sản phẩm khác!!!" + RESET);
             } else {
                 buyOneProduct(buyProduct);
@@ -300,53 +283,25 @@ public class UserView {
     }
 
     public void buyOneProduct(Product product) {
-        System.out.println("Các chức năng để lựa chọn: ");
-        System.out.println(PURPLE + "+--------------------------------------------------------+");
-        System.out.println("|" + WHITE_BRIGHT + " 1. THÊM VÀO GIỎ HÀNG        |    0. QUAY LẠI           " + PURPLE + "|");
-        System.out.println("+--------------------------------------------------------+" + RESET);
-        System.out.println("Nhập lựa chọn: ");
+//        System.out.println("Các chức năng để lựa chọn: ");
+//        System.out.println(PURPLE + "+--------------------------------------------------------+");
+//        System.out.println("|" + WHITE_BRIGHT + " 1. THÊM VÀO GIỎ HÀNG        |    0. QUAY LẠI           " + PURPLE + "|");
+//        System.out.println("+--------------------------------------------------------+" + RESET);
+//        System.out.println("Nhập lựa chọn: ");
 
-        switch (Validation.validateInt()) {
-            case 1:
-//                if (!product.isStatus() || !product.getCategory().isStatus() || product.getStock() == 0) {
-//                    System.out.println(RED + "Sản phẩm đang hết hàng, vui lòng chọn sản phẩm khác!!!" + RESET);
-//                    return;
-//                }
-//                if (HomeView.userCart == null || HomeView.userCart.getCartUsers() == null || HomeView.userCart.getCartUsers().isEmpty()) {
-//                    cart.put(product, 1);
-//                    HomeView.userCart.getCartUsers().put(product, 1);
-//                    System.out.println(PURPLE_BRIGHT + "Đã thêm sản phẩm " + product.getProductName() + " thành công!" + RESET);
-//                    return;
-//                }
-//
-//                boolean productExistsInCart = false;
-//                for (Map.Entry<Product, Integer> entry : HomeView.userCart.getCartUsers().entrySet()) {
-//                    if (entry.getKey().equals(product)) {
-//                        if (entry.getValue() <= product.getStock()) {
-//                            entry.setValue(entry.getValue() + 1);
-//                            productExistsInCart = true;
-//                            System.out.println(PURPLE_BRIGHT + "Đã thêm sản phẩm " + product.getProductName() + " thành công!" + RESET);
-//                            break;
-//                        } else {
-//                            System.out.println(RED + "Số lượng vượt quá tồn kho, vui lòng kiểm tra lại!!!" + RESET);
-//                        }
-//                        break;
-//                    }
-//                }
-//                if (!productExistsInCart) {
-//                    HomeView.userCart.getCartUsers().put(product, 1);
-//                    System.out.println(PURPLE_BRIGHT + "Đã thêm sản phẩm " + product.getProductName() + " thành công!" + RESET);
-//                }
-//                cartService.save(HomeView.userCart);
-
-                //cach 2:
+//        switch (Validation.validateInt()) {
+//            case 1:
+                if (!product.isStatus() || !product.getCategory().isStatus() || product.getStock() == 0) {
+                    System.out.println(RED + "Sản phẩm đang hết hàng, vui lòng chọn sản phẩm khác!!!" + RESET);
+                    return;
+                }
                 boolean productExistsInCart = false;
                 for (Map.Entry<Product, Integer> entry : HomeView.userCart.getCartUsers().entrySet()) {
                     if (entry.getKey().equals(product)) {
                         if (entry.getValue() <= product.getStock()) {
                             entry.setValue(entry.getValue() + 1);
                             productExistsInCart = true;
-                            System.out.println(PURPLE_BRIGHT + "Đã thêm sản phẩm " + product.getProductName() + " thành công!" + RESET);
+                            System.out.println(PURPLE_BRIGHT + "Đã thêm sản phẩm " + product.getProductName() + " vào giỏ hàng thành công!" + RESET);
                             break;
                         } else {
                             System.out.println(RED + "Số lượng vượt quá tồn kho, vui lòng kiểm tra lại!!!" + RESET);
@@ -356,15 +311,15 @@ public class UserView {
                 }
                 if (!productExistsInCart) {
                     HomeView.userCart.getCartUsers().put(product, 1);
-                    System.out.println(PURPLE_BRIGHT + "Đã thêm sản phẩm " + product.getProductName() + " thành công!" + RESET);
+                    System.out.println(PURPLE_BRIGHT + "Đã thêm sản phẩm " + product.getProductName() + " vào giỏ hàng thành công!" + RESET);
                 }
                 cartService.save(HomeView.userCart);
-                break;
-            case 2:
-                return;
-            default:
-                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
-                break;
-        }
+//                break;
+//            case 0:
+//                return;
+//            default:
+//                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
+//                break;
+//        }
     }
 }

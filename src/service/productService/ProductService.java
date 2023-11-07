@@ -51,10 +51,10 @@ public class ProductService implements IService<Product, Long> {
         return productList;
     }
 
-    public List<Product> searchTrueProduct(String productName) {
+    public List<Product> searchTrueProductByName(String productName) {
         List<Product> productList = new ArrayList<>();
         for (Product product : productService.findAll()) {
-            if (product.isStatus() && product.getCategory().isStatus()) {
+            if (product.isStatus() && product.getCategory().isStatus()&&product.getStock()>0) {
                 if (product.getProductName().toLowerCase().contains(productName.toLowerCase())) {
                     productList.add(product);
                 }

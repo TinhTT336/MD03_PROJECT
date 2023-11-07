@@ -4,6 +4,8 @@ import model.Entity;
 import model.category.Category;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Product extends Entity<Long>{
     private static final long serialVersionUID = 1L;
@@ -14,7 +16,24 @@ public class Product extends Entity<Long>{
     private double unitPrice;
     private Category category;
     private boolean status=true;
+    private  Integer countLikes=0;
+    private boolean like;
 
+    public boolean isLike() {
+        return like;
+    }
+
+    public void setLike(boolean like) {
+        this.like = like;
+    }
+
+    public  Integer getCountLikes() {
+        return countLikes;
+    }
+
+    public void setCountLikes(Integer countLikes) {
+        this.countLikes = countLikes;
+    }
 
     public String getProductName() {
         return productName;
@@ -23,8 +42,6 @@ public class Product extends Entity<Long>{
     public void setProductName(String productName) {
         this.productName = productName;
     }
-
-
 
     public int getStock() {
         return stock;

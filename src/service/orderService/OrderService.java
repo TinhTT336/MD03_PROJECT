@@ -11,11 +11,9 @@ import java.util.List;
 
 public class OrderService implements IService<Order,Long> {
     private Service<Order,Long>orderService;
-    private Service<User,Long>userService;
 
     public OrderService() {
         this.orderService = new Service<>(FileName.ORDER);
-        this.userService = new Service<>(FileName.USER);
     }
 
     @Override

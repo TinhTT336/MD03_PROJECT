@@ -3,22 +3,28 @@ package view.user;
 import config.Validation;
 import constant.FileName;
 import constant.Role;
+import model.order.Order;
 import model.user.User;
 import service.Service;
 import service.userService.UserService;
 import view.order.OrderView;
 
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static config.Color.*;
 
 public class AccountView {
     private Service<User, Long> userService;
     private Service<User, Long> loginService;
+    private Service<Order, Long> orderService;
 
 
     public AccountView() {
         this.userService = new Service<>(FileName.USER);
         this.loginService = new Service<>(FileName.LOGIN);
+        this.orderService = new Service<>(FileName.ORDER);
     }
 
     public void showAccountManagement() {
@@ -49,7 +55,16 @@ public class AccountView {
                     changePassword();
                     break;
                 case 4:
-                    new OrderView().showUserLoginOrder();
+                    if (HomeView.userLogin.getRole().equals(Role.USER)) {
+                        List<Order> orderUserLogin = orderService.findAll().stream().filter(o -> o.getUserId().equals(HomeView.userLogin.getId())).sorted((o1, o2) -> (o2.getOrderAt().compareTo(o1.getOrderAt()))).collect(Collectors.toList());
+                        System.out.println(WHITE_BOLD_BRIGHT + "\nDANH SÁCH ĐƠN HÀNG                        " + RESET);
+                        new OrderView().showOrderList(orderUserLogin);
+                        if (!orderUserLogin.isEmpty()) {
+                            new OrderView().showOrderDetail();
+                        }
+                    } else {
+                        System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
+                    }
                     break;
                 case 0:
                     return;
@@ -82,32 +97,10 @@ public class AccountView {
                     }
                 }
             }
-
-//            System.out.println("Nhập mật khẩu tài khoản ");
-//            String oldPass = Validation.validatePassword();
-//
-//            System.out.println("Nhập mật khẩu muốn thay đổi: ");
-//            String newPass = Validation.validatePassword();
-//
-//            System.out.println("Xác nhận lại mật khẩu: ");
-//            String rePass = Validation.validatePassword();
-//
-//            if (!oldPass.equals(HomeView.userLogin.getPassword())) {
-//                System.out.println("Mật khẩu không chính xác, vui lòng kiểm tra lại");
-//            } else if (newPass.equals(oldPass)) {
-//                System.out.println("Mật khẩu mới không được trùng với mật khẩu trước đó");
-//            } else {
-//                if (!newPass.equals(rePass)) {
-//                    System.out.println("Mật khẩu không khớp, vui lòng kiểm tra lại");
-//                } else {
-//                    HomeView.userLogin.setPassword(newPass);
-//                    break;
-//                }
-//            }
         }
         loginService.saveOne(HomeView.userLogin);
         userService.save(HomeView.userLogin);
-        System.out.println(PURPLE_BRIGHT+"Thay đổi mật khẩu thành công!"+RESET);
+        System.out.println(PURPLE_BRIGHT + "Thay đổi mật khẩu thành công!" + RESET);
     }
 
     private void changeAccount() {
@@ -127,7 +120,7 @@ public class AccountView {
                     System.out.println("Nhập tên tài khoản muốn thay đổi: ");
                     String username = Validation.validateString();
                     if (new UserService().checkUsernameExist(username)) {
-                        System.out.println(RED+"Tên tài khoản đã tồn tại, vui lòng nhập lại!!!"+RESET);
+                        System.out.println(RED + "Tên tài khoản đã tồn tại, vui lòng nhập lại!!!" + RESET);
                     } else {
                         HomeView.userLogin.setUsername(username);
                         break;
@@ -139,7 +132,7 @@ public class AccountView {
                     System.out.println("Nhập email muốn thay đổi: ");
                     String email = Validation.validateEmail();
                     if (new UserService().checkEmailExist(email)) {
-                        System.out.println(RED+"Email đã tồn tại, vui lòng nhập lại!!!"+RESET);
+                        System.out.println(RED + "Email đã tồn tại, vui lòng nhập lại!!!" + RESET);
                     } else {
                         HomeView.userLogin.setEmail(email);
                         break;
@@ -159,7 +152,7 @@ public class AccountView {
         userService.save(HomeView.userLogin);
         loginService.saveOne(HomeView.userLogin);
 
-        System.out.println(PURPLE_BRIGHT+"Thay đổi thông tin tài khoản thành công!"+RESET);
+        System.out.println(PURPLE_BRIGHT + "Thay đổi thông tin tài khoản thành công!" + RESET);
     }
 
     private void showDetailAccount() {
