@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 import static config.Color.*;
 
 public class CommentView {
-    private Service<Comment, Long> commentService;
-    private Service<User, Long> userService;
+    private final Service<Comment, Long> commentService;
+    private final Service<User, Long> userService;
 
     public CommentView() {
         this.commentService = new Service<>(FileName.COMMENT);
@@ -31,12 +31,19 @@ public class CommentView {
         System.out.println(WHITE_BRIGHT+"Sản phẩm "+product.getProductName()+"  có "+productCommentList.size()+" bình luận!"+RESET);
         for (Comment comment : productCommentList) {
             if (product.getId().equals(comment.getProductId())) {
-                System.out.println(PURPLE +(userService.findById(comment.getUserId()).getId().equals(HomeView.userLogin.getId())?("Bạn"):userService.findById(comment.getUserId()).getFullName())  + " đã bình luận: " + comment.getComment() + RESET);
+//                System.out.println(PURPLE +(userService.findById(comment.getUserId()).getId().equals(HomeView.userLogin.getId())?("Bạn"):userService.findById(comment.getUserId()).getFullName())  + " đã bình luận: " + comment.getComment() + RESET);
+                System.out.println(PURPLE +(userService.findById(comment.getUserId()).getFullName())  + " đã bình luận: " + comment.getComment() + RESET);
             }
         }
 
     }
     public void addNewComment(Product product){
+        if(HomeView.userLogin==null){
+            System.out.println(RED + "Vui lòng đăng nhập để thực hiện chức năng này!!!" + RESET);
+            System.out.println();
+            new HomeView().login();
+            return;
+        }
         System.out.println("Thêm bình luận cho sản phẩm: ");
         Comment newComment=new Comment();
         newComment.setId(commentService.getNewId());

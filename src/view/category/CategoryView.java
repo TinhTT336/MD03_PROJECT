@@ -17,8 +17,8 @@ import static config.Color.*;
 import static config.Color.PURPLE;
 
 public class CategoryView {
-    private Service<Category, Long> categoryService;
-    private Service<Product, Long> productService;
+    private final Service<Category, Long> categoryService;
+    private final Service<Product, Long> productService;
 
     public CategoryView() {
         this.categoryService = new Service<>(FileName.CATEGORY);

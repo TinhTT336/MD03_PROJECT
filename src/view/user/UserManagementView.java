@@ -14,7 +14,7 @@ import static config.Color.*;
 import static config.Color.PURPLE;
 
 public class UserManagementView {
-    private Service<User, Long> userService;
+    private final Service<User, Long> userService;
 
     public UserManagementView() {
         this.userService = new Service<>(FileName.USER);

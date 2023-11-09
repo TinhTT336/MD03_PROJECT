@@ -42,18 +42,6 @@ public class CartService implements IService<Cart, Long> {
         return cartService.deleteById(id);
     }
 
-    public Cart getCurrentCartUser() {
-        User userLogin = new UserService().getCurrentUser();
-//        return new Config<Cart>().readFile(FileName.CART);
-        if (!cartService.findAll().isEmpty() && cartService.findAll() != null) {
-            for (Cart cart : cartService.findAll()) {
-                if (cart.getUserId().equals(userLogin.getId())) {
-                    return cart;
-                }
-            }
-        }
-        return null;
-    }
 
     public Cart getCartByUserLogin(User userLogin) {
 //        User userLogin = new UserService().getCurrentUser();

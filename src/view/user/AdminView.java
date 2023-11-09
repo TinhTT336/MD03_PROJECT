@@ -1,6 +1,5 @@
 package view.user;
 
-import com.sun.org.apache.regexp.internal.RE;
 import config.Config;
 import config.Validation;
 import constant.FileName;
@@ -13,7 +12,7 @@ import static config.Color.*;
 
 public class AdminView {
     public void showMenuAdmin() {
-        while (true) {
+        do {
             System.out.println(PURPLE + "+------------------------------------------------------------------------------------------------+");
             System.out.printf("|" + WHITE_BOLD_BRIGHT + "   TMESTICS   \uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84                                   Xin chào: %-28s\n", HomeView.userLogin.getFullName() + PURPLE + "                 |");
             System.out.println("+------------------------------------------------------------------------------------------------+");
@@ -44,12 +43,12 @@ public class AdminView {
                     break;
                 case 0:
                     new Config<User>().writeFile(FileName.LOGIN, null);
-                    HomeView.userLogin=null;
+                    HomeView.userLogin = null;
                     new HomeView().showMenuHome();
                 default:
-                    System.out.println(RED+"Không có chức năng phù hợp, vui lòng chọn lại!!!"+RESET);
+                    System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
                     break;
             }
-        }
+        } while (true);
     }
 }

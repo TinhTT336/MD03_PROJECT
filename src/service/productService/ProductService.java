@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ProductService implements IService<Product, Long> {
 
-    private Service<Product, Long> productService;
+    private final Service<Product, Long> productService;
 
     public ProductService() {
         productService = new Service<>(FileName.PRODUCT);
@@ -63,7 +63,7 @@ public class ProductService implements IService<Product, Long> {
         return productList;
     }
 
-    public List<Product> searchTrueProductByCatID(int id) {
+    public List<Product> searchTrueProductByCatID(Long id) {
         List<Product> productList = new ArrayList<>();
         for (Product product : productService.findAll()) {
             if (product.isStatus() && product.getCategory().isStatus()&&product.getStock()>0) {
@@ -75,15 +75,4 @@ public class ProductService implements IService<Product, Long> {
         return productList;
     }
 
-    public List<Product> sortProductByIncreasePrice() {
-        List<Product> productList = productService.findAll();
-        productList.sort((p1, p2) -> (int) -(p1.getUnitPrice() - p2.getUnitPrice()));
-        return productList;
-    }
-
-    public List<Product> sortProductByDecreasePrice() {
-        List<Product> productList = productService.findAll();
-        productList.sort((p1, p2) -> (int) (p1.getUnitPrice() - p2.getUnitPrice()));
-        return productList;
-    }
 }

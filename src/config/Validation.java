@@ -56,7 +56,7 @@ public class Validation {
             if (phone.matches("(84|0[3|5|7|8|9])+([0-9]{8})\\b")) {
                 break;
             } else {
-                System.out.println(RED + "Số điện thoại bắt đầu bằng số 0 và có độ dài 10 hoặc 11 số, vui lòng nhập lại: " + RESET);
+                System.out.println(RED + "Số điện thoại bắt đầu bằng 84/03/05/07/08/09 và có độ dài 10 hoặc 11 số, vui lòng nhập lại: " + RESET);
             }
         }
         return phone;

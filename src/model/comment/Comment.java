@@ -7,9 +7,9 @@ import java.io.Serializable;
 public class Comment extends Entity<Long> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-private Long userId;
-private Long productId;
-private String comment;
+    private Long userId;
+    private Long productId;
+    private String comment;
 
     public Long getUserId() {
         return userId;

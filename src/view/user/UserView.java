@@ -20,11 +20,11 @@ import java.util.stream.Collectors;
 import static config.Color.*;
 
 public class UserView {
-    private Service<Product, Long> productService;
-    private Service<User, Long> userLoginService;
-    private Service<Cart, Long> cartService;
-    private Service<Order, Long> orderService;
-    private Service<Category, Long> categoryService;
+    private final Service<Product, Long> productService;
+    private final Service<User, Long> userLoginService;
+    private final Service<Cart, Long> cartService;
+    private final Service<Order, Long> orderService;
+    private final Service<Category, Long> categoryService;
 
     public UserView() {
         this.productService = new Service<>(FileName.PRODUCT);
@@ -37,7 +37,7 @@ public class UserView {
     public void showMenuUser() {
         do {
             System.out.println(PURPLE + "+------------------------------------------------------------------------------------------------+");
-            System.out.printf("|" + WHITE_BOLD_BRIGHT + "   TMESTICS   \uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84                                         Xin chào: %24s\n", HomeView.userLogin.getFullName() + PURPLE + " |");
+            System.out.printf("|" + WHITE_BOLD_BRIGHT + "   TMESTICS   \uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84                                         Xin chào: %24s\n", HomeView.userLogin.getFullName() + PURPLE + "          |");
             System.out.println("+------------------------------------------------------------------------------------------------+");
             System.out.println("|" + RESET + "                                 1. \uD83D\uDCE6 DANH SÁCH SẢN PHẨM                                       " + PURPLE + "|");
             System.out.println("|" + RESET + "                                 2. \uD83D\uDDC2️ SẢN PHẨM NỔI BẬT                                         " + PURPLE + "|");
@@ -56,7 +56,7 @@ public class UserView {
                 case 1:
                     new ProductView().showTrueProduct(productService.findAll());
                     if (!productService.findAll().isEmpty()) {
-                        new ProductView().showProductDetail();
+                        new ProductView().showProductDetailForUser();
                     }
                     break;
                 case 2:
@@ -311,6 +311,12 @@ public class UserView {
     }
 
     public void buyOneProduct(Product product) {
+        if(HomeView.userLogin==null){
+            System.out.println(RED + "Vui lòng đăng nhập để thực hiện chức năng này!!!" + RESET);
+            System.out.println();
+            new HomeView().login();
+            return;
+        }
         if (!product.isStatus() || !product.getCategory().isStatus() || product.getStock() == 0) {
             System.out.println(RED + "Sản phẩm đang hết hàng, vui lòng chọn sản phẩm khác!!!" + RESET);
             return;

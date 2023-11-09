@@ -4,7 +4,6 @@ import config.StringFormatter;
 import config.Validation;
 import constant.FileName;
 import model.category.Category;
-import model.comment.Comment;
 import model.like.Like;
 import model.product.Product;
 import service.Service;
@@ -15,21 +14,18 @@ import view.like.LikeView;
 import view.user.HomeView;
 import view.user.UserView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static config.Color.*;
 
 public class ProductView {
-    private Service<Product, Long> productService;
-    private Service<Category, Long> categoryService;
-    private Service<Like, Long> likeService;
+    private final Service<Product, Long> productService;
+    private final Service<Category, Long> categoryService;
 
     public ProductView() {
         this.productService = new Service<>(FileName.PRODUCT);
         this.categoryService = new Service<>(FileName.CATEGORY);
-        this.likeService = new Service<>(FileName.LIKE);
     }
 
     public void showProductManagement() {
@@ -136,11 +132,11 @@ public class ProductView {
         System.out.println("Nhập lựa chọn: ");
         switch (Validation.validateInt()) {
             case 1:
-                List<Product> productList = new ProductService().sortProductByIncreasePrice();
+                List<Product> productList = productService.findAll().stream().sorted((p1, p2) -> (int) -(p1.getUnitPrice() - p2.getUnitPrice())).collect(Collectors.toList());
                 showListProduct(productList);
                 break;
             case 2:
-                List<Product> products = new ProductService().sortProductByDecreasePrice();
+                List<Product> products = productService.findAll().stream().sorted((p1, p2) -> (int) (p1.getUnitPrice() - p2.getUnitPrice())).collect(Collectors.toList());
                 showListProduct(products);
                 break;
             case 0:
@@ -269,11 +265,11 @@ public class ProductView {
     private void inputStock(Product newProduct) {
         while (true) {
             int stock = Validation.validateInt();
-            if (stock <= 0) {
+            if (stock < 0) {
                 System.out.println(RED + "Tồn kho sản phẩm phải lớn hơn 0!!!" + RESET);
             } else {
                 newProduct.setStock(stock);
-                if(newProduct.getStock()==0){
+                if (newProduct.getStock() == 0) {
                     newProduct.setStatus(false);
                 }
                 break;
@@ -404,7 +400,7 @@ public class ProductView {
                         System.out.println(RED + "Không tìm thấy danh mục với mã vừa nhập!!!" + RESET);
                         return;
                     }
-                    List<Product> productList = new ProductService().searchTrueProductByCatID(showIdCat);
+                    List<Product> productList = new ProductService().searchTrueProductByCatID((long) showIdCat);
                     if (productList == null || productList.isEmpty()) {
                         System.out.println(PURPLE_BRIGHT + "Danh mục " + "'" + showCat.getCategoryName() + "'" + " không có sản phẩm nào." + RESET);
                     } else {
@@ -491,25 +487,52 @@ public class ProductView {
         }
     }
 
+    public void showProductDetailForUser() {
+        System.out.println("Các chức năng để lựa chọn: ");
+        System.out.println(PURPLE + "+--------------------------------------------------------+");
+        System.out.println("|" + WHITE_BRIGHT + " 1. XEM CHI TIẾT SẢN PHẨM    |    0. QUAY LẠI           " + PURPLE + "|");
+        System.out.println("+--------------------------------------------------------+" + RESET);
+
+        switch (Validation.validateInt()) {
+            case 1:
+                System.out.println("Nhập mã sản phẩm để xem chi tiết: ");
+                int proDetailId = Validation.validateInt();
+                Product productDetail = productService.findById((long) proDetailId);
+                if (productDetail == null) {
+                    showTHead();
+                    System.out.println(PURPLE + "|" + RED + "  Không có sản phẩm với mã vừa nhập!!!" + RESET);
+                    showTLine();
+                } else {
+                    if (productDetail.isStatus() && productDetail.getCategory().isStatus() && productDetail.getStock() > 0) {
+                        System.out.println(WHITE_BOLD_BRIGHT + "CHI TIẾT SẢN PHẨM" + RESET);
+                        showProductForUser(productDetail);
+                        likeAndCommentAndBuyProduct(productDetail);
+                    } else {
+                        System.out.println(PURPLE + "|" + RED + "  Không có sản phẩm với mã vừa nhập!!!" + RESET);
+                    }
+
+                }
+                break;
+            case 0:
+                return;
+            default:
+                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
+                break;
+        }
+    }
+
 
     private void likeAndCommentAndBuyProduct(Product product) {
-        List<Like> productLikeList;
-        if (likeService.findAll().isEmpty() || likeService.findAll() == null) {
-            productLikeList = new ArrayList<>();
-        } else {
-            productLikeList = likeService.findAll().stream().filter(l -> l.getProductId().equals(product.getId())).filter(Like::isLikeStatus).collect(Collectors.toList());
-        }
-        System.out.println();
+        List<Like> productLikeList = new LikeView().getProductLikeList(product);
 
         System.out.println("Các chức năng để lựa chọn: ");
-        System.out.println(PURPLE+"+-------------------------------------------------------------------------------------------------+" + RESET);
-        if (new LikeView().findLikeById(productLikeList, HomeView.userLogin)!=null) {
-            System.out.println(PURPLE+"|"+WHITE_BRIGHT+"   1. UNLIKE SẢN PHẨM   |    2. BÌNH LUẬN      |    3. THÊM VÀO GIỎ HÀNG    |    0. QUAY LẠI      "+PURPLE+"|"+RESET );
+        System.out.println(PURPLE + "+-------------------------------------------------------------------------------------------------+" + RESET);
+        if (new LikeView().findLikeById(productLikeList, HomeView.userLogin) != null) {
+            System.out.println(PURPLE + "|" + WHITE_BRIGHT + "   1. UNLIKE SẢN PHẨM   |    2. BÌNH LUẬN      |    3. THÊM VÀO GIỎ HÀNG    |    0. QUAY LẠI      " + PURPLE + "|" + RESET);
         } else {
-            System.out.println(PURPLE+"|"+WHITE_BRIGHT+"   1. LIKE SẢN PHẨM     |    2. BÌNH LUẬN      |    3. THÊM VÀO GIỎ HÀNG   |    0. QUAY LẠI      "+PURPLE+"|" +RESET);
-
+            System.out.println(PURPLE + "|" + WHITE_BRIGHT + "   1. LIKE SẢN PHẨM     |    2. BÌNH LUẬN      |    3. THÊM VÀO GIỎ HÀNG   |    0. QUAY LẠI      " + PURPLE + "|" + RESET);
         }
-        System.out.println(PURPLE+"+-------------------------------------------------------------------------------------------------+" + RESET);
+        System.out.println(PURPLE + "+-------------------------------------------------------------------------------------------------+" + RESET);
         System.out.println("Nhập lựa chọn: ");
         switch (Validation.validateInt()) {
             case 1:
@@ -552,7 +575,7 @@ public class ProductView {
 
     public void showTBody(Product product) {
         System.out.printf(PURPLE + "|" + RESET + " %-4d| %-35.35s| %-11s| %-35.35s|  %-11s |   %-4d  | %-10s" + PURPLE + "|\n",
-                product.getId(), product.getProductName(), product.getCategory().getCategoryName(), product.getDescription(), StringFormatter.formatCurrency(product.getUnitPrice()), product.getStock(), (product.isStatus() ? "Còn hàng": "Hết hàng"));
+                product.getId(), product.getProductName(), product.getCategory().getCategoryName(), product.getDescription(), StringFormatter.formatCurrency(product.getUnitPrice()), product.getStock(), (product.isStatus() ? "Còn hàng" : "Hết hàng"));
     }
 
     public void showTLine() {

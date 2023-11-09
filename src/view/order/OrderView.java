@@ -13,6 +13,7 @@ import view.product.ProductView;
 import view.user.HomeView;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,9 +21,9 @@ import java.util.stream.Collectors;
 import static config.Color.*;
 
 public class OrderView {
-    private Service<Order, Long> orderService;
-    private Service<Product, Long> productService;
-    private Service<User, Long> userService;
+    private final Service<Order, Long> orderService;
+    private final Service<Product, Long> productService;
+    private final Service<User, Long> userService;
 
     public OrderView() {
         this.orderService = new Service<>(FileName.ORDER);
@@ -43,6 +44,7 @@ public class OrderView {
             System.out.println("|" + RESET + "                                 4. \uD83D\uDCDD CẬP NHẬT ĐƠN HÀNG ĐANG GIAO                              " + PURPLE + "|");
             System.out.println("|" + RESET + "                                 5. \uD83D\uDD00 SẮP XẾP ĐƠN HÀNG THEO TỔNG TIỀN                          " + PURPLE + "|");
             System.out.println("|" + RESET + "                                 6. \uD83D\uDD3D LỌC ĐƠN HÀNG THEO TRẠNG THÁI                             " + PURPLE + "|");
+            System.out.println("|" + RESET + "                                 7. \uD83D\uDD0E TÌM KIẾM ĐƠN HÀNG THEO TÊN                               " + PURPLE + "|");
             System.out.println("|" + RESET + "                                 0. ↩️ QUAY LẠI                                                 " + PURPLE + "|");
             System.out.println("+------------------------------------------------------------------------------------------------+\n" + RESET);
             System.out.println("Nhập lựa chọn: ");
@@ -71,6 +73,9 @@ public class OrderView {
                 case 6:
                     sortOrderByStatus();
                     break;
+                case 7:
+                    searchOrderByUserName();
+                    break;
                 case 0:
                     return;
                 default:
@@ -78,6 +83,39 @@ public class OrderView {
                     break;
             }
         } while (true);
+    }
+
+    private void searchOrderByUserName() {
+        List<User> userList = new ArrayList<>();
+        System.out.println("Nhập tên tài khoản muốn tìm kiếm: ");
+        String name = Validation.validateString();
+        for (User user : userService.findAll()) {
+            if (user.getUsername().toLowerCase().contains(name.toLowerCase())&&user.getRole().equals(Role.USER)) {
+                userList.add(user);
+            }
+        }
+        if (userList.isEmpty()) {
+            System.out.println(RED + "Không có đơn hàng với tên tài khoản " + "'" + name + "'" + " vừa nhập!!!" + RESET);
+        } else {
+            List<Order>orderList=new ArrayList<>();
+            System.out.println(WHITE_BOLD_BRIGHT + "DANH SÁCH ĐƠN HÀNG TÌM KIẾM " + RESET);
+            showTHead();
+            for (Order order : orderService.findAll()) {
+                for (User user : userList) {
+                    if (order.getUserId().equals(user.getId())) {
+                        showTBody(order);
+                        orderList.add(order);
+                    }
+                }
+            }
+            new ProductView().showTLine();
+            if(orderList.isEmpty()){
+                System.out.println(PURPLE + "|" + RED + " Không có đơn hàng nào!!!" + RESET);
+                new ProductView().showTLine();
+            }else{
+                System.out.println(PURPLE_BRIGHT + " Tìm được " + orderList.size() + " đơn hàng với tên tài khoản " + "'" + name + "'" + RESET);
+            }
+        }
     }
 
     private void updateOrderToDelivery() {
@@ -113,7 +151,7 @@ public class OrderView {
                 orderService.save(order1);
                 System.out.println(PURPLE_BRIGHT + "Đơn hàng " + order1.getId() + " đang được giao!" + RESET);
             } else {
-                System.out.println(RED + "Trạng thái đơn hàng " + order1.getId() + " hoặc thời gian giao hàng không phù hợp, vui lòng kiểm tra lại!!!" + RESET);
+                System.out.println(RED + "Trạng thái đơn hàng hoặc thời gian giao hàng " + order1.getId() + " không phù hợp, vui lòng kiểm tra lại!!!" + RESET);
             }
         }
     }
@@ -287,7 +325,6 @@ public class OrderView {
         }
     }
 
-
     public void showOrderDetail() {
         System.out.println("Các chức năng để lựa chọn: ");
         System.out.println(PURPLE + "+--------------------------------------------------------+");
@@ -319,11 +356,11 @@ public class OrderView {
                     new ProductView().showTLine();
                     System.out.printf(PURPLE + "|" + WHITE_BOLD_BRIGHT + "      TỔNG TIỀN                                                                       |   %-14s     \n", StringFormatter.formatCurrency(orderDetail.getTotal()) + PURPLE + "                              |");
                     new ProductView().showTLine();
-                    if (orderDetail.getOrderStatus().equals(OrderStatus.CONFIRM) && orderDetail.getDeliverAt().isEqual(LocalDateTime.now()) ||orderDetail.getOrderStatus().equals(OrderStatus.CONFIRM) && LocalDateTime.now().isBefore(orderDetail.getDeliverAt())) {
-                        orderDetail.setOrderStatus(OrderStatus.DELIVERY);
-                        orderService.save(orderDetail);
-                        System.out.println(PURPLE_BRIGHT + "Đơn hàng " + orderDetail.getId() + " đang được giao!" + RESET);
-                    }
+//                    if (HomeView.userLogin.getRole().equals(Role.USER) &&orderDetail.getOrderStatus().equals(OrderStatus.CONFIRM) && orderDetail.getDeliverAt().isEqual(LocalDateTime.now()) ||HomeView.userLogin.getRole().equals(Role.USER) &&orderDetail.getOrderStatus().equals(OrderStatus.CONFIRM) && LocalDateTime.now().isBefore(orderDetail.getDeliverAt())) {
+//                        orderDetail.setOrderStatus(OrderStatus.DELIVERY);
+//                        orderService.save(orderDetail);
+//                        System.out.println(PURPLE_BRIGHT + "Đơn hàng " + orderDetail.getId() + " đang được giao!" + RESET);
+//                    }
                     if (HomeView.userLogin.getRole().equals(Role.USER) && orderDetail.getOrderStatus().equals(OrderStatus.DELIVERY)) {
                         confirmOrderDelivered(orderDetail);
                         return;

@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 import static config.Color.*;
 
 public class AccountView {
-    private Service<User, Long> userService;
-    private Service<User, Long> loginService;
-    private Service<Order, Long> orderService;
+    private final Service<User, Long> userService;
+    private final Service<User, Long> loginService;
+    private final Service<Order, Long> orderService;
 
 
     public AccountView() {
@@ -30,7 +30,7 @@ public class AccountView {
     public void showAccountManagement() {
         do {
             System.out.println(PURPLE + "+------------------------------------------------------------------------------------------------+");
-            System.out.printf("|" + WHITE_BOLD_BRIGHT + "   TMESTICS   \uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84                                         Xin chào: %24s\n", HomeView.userLogin.getFullName() + PURPLE + " |");
+            System.out.printf("|" + WHITE_BOLD_BRIGHT + "   TMESTICS   \uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84                                         Xin chào: %24s\n", HomeView.userLogin.getFullName() + PURPLE + "          |");
             System.out.println("+------------------------------------------------------------------------------------------------+");
             System.out.println("|" + WHITE_BOLD_BRIGHT + "                                    \uD83D\uDCBC THÔNG TIN TÀI KHOẢN                                      " + PURPLE + "|");
             System.out.println("+------------------------------------------------------------------------------------------------+");

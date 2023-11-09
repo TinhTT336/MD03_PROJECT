@@ -19,12 +19,10 @@ import static config.Color.*;
 
 
 public class HomeView {
-    private Service<Product, Long> productService;
-    private Service<Cart, Long> cartService;
+    private final Service<Product, Long> productService;
 
     public HomeView() {
         this.productService = new Service<>(FileName.PRODUCT);
-        this.cartService = new Service<>(FileName.CART);
     }
 
     UserService userService = new UserService();
@@ -59,7 +57,7 @@ public class HomeView {
                 case 3:
                     new ProductView().showTrueProduct(productService.findAll());
                     if (!productService.findAll().isEmpty()) {
-                        new ProductView().showProductDetail();
+                        new ProductView().showProductDetailForUser();
                     }
                     break;
                 case 4:
@@ -147,7 +145,7 @@ public class HomeView {
         login();
     }
 
-    private void login() {
+    public void login() {
         System.out.println(WHITE_BOLD_BRIGHT + "\uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84-------- ĐĂNG NHẬP-------- \uD83D\uDC8B(¯`•.¸.•´¯)\uD83D\uDC84" + RESET);
         System.out.println();
         System.out.println("Nhập tên tài khoản: ");
@@ -171,6 +169,7 @@ public class HomeView {
         if (user.getRole().equals(Role.ADMIN)) {
             userLogin = user;
             new Config<User>().writeFile(FileName.LOGIN, userLogin);
+//            System.out.println(PURPLE_BRIGHT + "Đăng nhập thành công!" + RESET);
             new AdminView().showMenuAdmin();
         } else {
             if (user.getRole().equals(Role.USER)) {
@@ -180,6 +179,7 @@ public class HomeView {
                     userCart = new Cart(new CartService().getNewId(), HomeView.userLogin.getId(), new HashMap<>());
                 }
                 new Config<User>().writeFile(FileName.LOGIN, userLogin);
+//                System.out.println(PURPLE_BRIGHT + "Đăng nhập thành công!" + RESET);
                 new UserView().showMenuUser();
             }
         }
