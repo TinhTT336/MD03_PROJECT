@@ -136,12 +136,12 @@ public class CategoryView {
     private void deleteCategory() {
         System.out.println("Nhập mã danh mục muốn xoá: ");
         int deleteId = Validation.validateInt();
-        for (Product product : productService.findAll()) {
-            if (product.getCategory().getId() == deleteId) {
-                System.out.println(RED + "Danh mục có chứa sản phẩm, không được xoá!!!" + RESET);
-                break;
-            }
-        }
+//        for (Product product : productService.findAll()) {
+//            if (product.getCategory().getId() == deleteId) {
+//                System.out.println(RED + "Danh mục có chứa sản phẩm, không được xoá!!!" + RESET);
+//                break;
+//            }
+//        }
         Category deleteCategory = categoryService.findById((long) deleteId);
         if (deleteCategory == null) {
             System.out.println(RED + "Không tìm thấy danh mục với mã vừa nhập!!!" + RESET);
@@ -149,11 +149,15 @@ public class CategoryView {
         } else {
             System.out.println("Thông tin danh mục muốn xoá: ");
             showCategory(deleteCategory);
-            System.out.println(" ");
             categoryService.deleteById((long) deleteId);
-            updateProductList(deleteCategory);
             System.out.println(PURPLE_BRIGHT + "Đã xoá danh mục thành công!!!" + RESET);
-            System.out.println();
+            for (Product product : productService.findAll()) {
+                if(product.getCategory().getId().equals(deleteCategory.getId()) ){
+                    productService.deleteById(product.getId());
+                }
+            }
+            System.out.println(PURPLE_BRIGHT + "Đã xoá các sản phẩm trong danh mục "+deleteCategory+" !!!" + RESET);
+
         }
     }
 

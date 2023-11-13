@@ -11,6 +11,7 @@ import service.productService.ProductService;
 import view.category.CategoryView;
 import view.commentview.CommentView;
 import view.like.LikeView;
+import view.order.OrderView;
 import view.user.HomeView;
 import view.user.UserView;
 
@@ -569,13 +570,14 @@ public class ProductView {
 
     public void showTHead() {
         System.out.println(PURPLE + "+---------------------------------------------------------------------------------------------------------------------------------+ " + RESET);
-        System.out.println(PURPLE + "|" + WHITE_BRIGHT + "  ID |                TÊN                 |  DANH MỤC  |                MÔ TẢ               |    ĐƠN GIÁ   | TỒN KHO | TRẠNG THÁI" + PURPLE + "|");
+        System.out.println(PURPLE + "|" + WHITE_BRIGHT + "  ID |                TÊN                 |  DANH MỤC  |          MÔ TẢ/So luong ban        |    ĐƠN GIÁ   | TỒN KHO | TRẠNG THÁI" + PURPLE + "|");
         showTLine();
     }
 
     public void showTBody(Product product) {
         System.out.printf(PURPLE + "|" + RESET + " %-4d| %-35.35s| %-11s| %-35.35s|  %-11s |   %-4d  | %-10s" + PURPLE + "|\n",
-                product.getId(), product.getProductName(), product.getCategory().getCategoryName(), product.getDescription(), StringFormatter.formatCurrency(product.getUnitPrice()), product.getStock(), (product.isStatus() ? "Còn hàng" : "Hết hàng"));
+                product.getId(), product.getProductName(), product.getCategory().getCategoryName(), product.getDescription()  +
+                        "("+new OrderView().getTotalBoughtProduct(product)+")", StringFormatter.formatCurrency(product.getUnitPrice()), product.getStock(), (product.isStatus() ? "Còn hàng" : "Hết hàng"));
     }
 
     public void showTLine() {

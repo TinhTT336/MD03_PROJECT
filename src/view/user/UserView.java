@@ -11,6 +11,7 @@ import model.product.Product;
 import model.user.User;
 import service.Service;
 import view.category.CategoryView;
+import view.order.OrderView;
 import view.product.ProductView;
 
 import java.time.LocalDateTime;
@@ -281,8 +282,10 @@ public class UserView {
 
     public void showFeaturedProduct() {
 //        List<Product> featuredProduct = productService.findAll().stream().sorted(Comparator.comparing(Product::getUnitPrice).reversed()).limit(10).collect(Collectors.toList());
-        List<Product> featuredProduct = productService.findAll().stream().sorted((p1, p2) -> (int) -(p1.getUnitPrice() - p2.getUnitPrice())).limit(5).collect(Collectors.toList());
-        new ProductView().showTrueProduct(featuredProduct);
+//        List<Product> featuredProduct = productService.findAll().stream().sorted((p1, p2) -> (int) -(p1.getUnitPrice() - p2.getUnitPrice())).limit(5).collect(Collectors.toList());
+//        new ProductView().showTrueProduct(featuredProduct);
+        List<Product> productList = productService.findAll().stream().filter(p->new OrderView().getTotalBoughtProduct(p)>0).sorted((p1,p2)->new OrderView().getTotalBoughtProduct(p2)-new OrderView().getTotalBoughtProduct(p1)).collect(Collectors.toList());
+        new ProductView().showTrueProduct(productList);
     }
 
     public void buyProducts() {
@@ -311,7 +314,7 @@ public class UserView {
     }
 
     public void buyOneProduct(Product product) {
-        if(HomeView.userLogin==null){
+        if (HomeView.userLogin == null) {
             System.out.println(RED + "Vui lòng đăng nhập để thực hiện chức năng này!!!" + RESET);
             System.out.println();
             new HomeView().login();

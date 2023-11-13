@@ -90,14 +90,14 @@ public class OrderView {
         System.out.println("Nhập tên tài khoản muốn tìm kiếm: ");
         String name = Validation.validateString();
         for (User user : userService.findAll()) {
-            if (user.getUsername().toLowerCase().contains(name.toLowerCase())&&user.getRole().equals(Role.USER)) {
+            if (user.getUsername().toLowerCase().contains(name.toLowerCase()) && user.getRole().equals(Role.USER)) {
                 userList.add(user);
             }
         }
         if (userList.isEmpty()) {
             System.out.println(RED + "Không có đơn hàng với tên tài khoản " + "'" + name + "'" + " vừa nhập!!!" + RESET);
         } else {
-            List<Order>orderList=new ArrayList<>();
+            List<Order> orderList = new ArrayList<>();
             System.out.println(WHITE_BOLD_BRIGHT + "DANH SÁCH ĐƠN HÀNG TÌM KIẾM " + RESET);
             showTHead();
             for (Order order : orderService.findAll()) {
@@ -109,10 +109,10 @@ public class OrderView {
                 }
             }
             new ProductView().showTLine();
-            if(orderList.isEmpty()){
+            if (orderList.isEmpty()) {
                 System.out.println(PURPLE + "|" + RED + " Không có đơn hàng nào!!!" + RESET);
                 new ProductView().showTLine();
-            }else{
+            } else {
                 System.out.println(PURPLE_BRIGHT + " Tìm được " + orderList.size() + " đơn hàng với tên tài khoản " + "'" + name + "'" + RESET);
             }
         }
@@ -122,39 +122,40 @@ public class OrderView {
         System.out.println(WHITE_BOLD_BRIGHT + "DANH SÁCH ĐƠN HÀNG ĐÃ XÁC NHẬN: " + RESET);
         showOrderList(getOrdersByStatus(OrderStatus.CONFIRM));
 
-//        System.out.println(PURPLE + "                                              +--------------------+" + RESET);
-//        System.out.println("Nhập mã đơn hàng muốn kiểm tra/ hoặc chọn:    " + PURPLE + "|" + WHITE_BRIGHT + "    0. QUAY LẠI     " + PURPLE + "|");
-//        System.out.println(PURPLE + "                                              +--------------------+" + RESET);
-//
-//        int confirmOrderId = Validation.validateInt();
-//        Order order = orderService.findById((long) confirmOrderId);
-//        if (order == null) {
-//            System.out.println(RED + "Không có đơn hàng với mã vừa nhập!!!" + RESET);
-//            return;
-//        }
-//
-//        if (findOrder(order, getOrdersByStatus(OrderStatus.CONFIRM))) {
-//            System.out.println(RED + "Không có đơn hàng với mã vừa nhập!!!" + RESET);
-//            return;
-//        }
+        System.out.println(PURPLE + "                                              +--------------------+" + RESET);
+        System.out.println("Nhập mã đơn hàng muốn kiểm tra/ hoặc chọn:    " + PURPLE + "|" + WHITE_BRIGHT + "    0. QUAY LẠI     " + PURPLE + "|");
+        System.out.println(PURPLE + "                                              +--------------------+" + RESET);
+
+        int confirmOrderId = Validation.validateInt();
+        Order order = orderService.findById((long) confirmOrderId);
+        if (order == null) {
+            System.out.println(RED + "Không có đơn hàng với mã vừa nhập!!!" + RESET);
+            return;
+        }
+
+        if (findOrder(order, getOrdersByStatus(OrderStatus.CONFIRM))) {
+            System.out.println(RED + "Không có đơn hàng với mã vừa nhập!!!" + RESET);
+            return;
+        }
 //        if (order.getDeliverAt().isEqual(LocalDateTime.now()) || LocalDateTime.now().isAfter(order.getDeliverAt())) {
-//            order.setOrderStatus(OrderStatus.DELIVERY);
-//            orderService.save(order);
-//            System.out.println(PURPLE_BRIGHT + "Đơn hàng " + order.getId() + " đang được giao!" + RESET);
-//        } else {
+        order.setOrderStatus(OrderStatus.DELIVERY);
+        orderService.save(order);
+        System.out.println(PURPLE_BRIGHT + "Đơn hàng " + order.getId() + " đang được giao!" + RESET);
+    }
+//        else {
 //            System.out.println(RED + "Trạng thái đơn hàng " + order.getId() + " và thời gian giao hàng không phù hợp, vui lòng kiểm tra lại!!!" + RESET);
 //        }
 
-        for (Order order1 : getOrdersByStatus(OrderStatus.CONFIRM)) {
-            if (order1.getDeliverAt().isEqual(LocalDateTime.now()) || LocalDateTime.now().isAfter(order1.getDeliverAt())) {
-                order1.setOrderStatus(OrderStatus.DELIVERY);
-                orderService.save(order1);
-                System.out.println(PURPLE_BRIGHT + "Đơn hàng " + order1.getId() + " đang được giao!" + RESET);
-            } else {
-                System.out.println(RED + "Trạng thái đơn hàng hoặc thời gian giao hàng " + order1.getId() + " không phù hợp, vui lòng kiểm tra lại!!!" + RESET);
-            }
-        }
-    }
+//        for (Order order1 : getOrdersByStatus(OrderStatus.CONFIRM)) {
+//            if (order1.getDeliverAt().isEqual(LocalDateTime.now()) || LocalDateTime.now().isAfter(order1.getDeliverAt())) {
+//            order1.setOrderStatus(OrderStatus.DELIVERY);
+//            orderService.save(order1);
+//            System.out.println(PURPLE_BRIGHT + "Đơn hàng " + order1.getId() + " đang được giao!" + RESET);
+//            } else {
+//                System.out.println(RED + "Trạng thái đơn hàng hoặc thời gian giao hàng " + order1.getId() + " không phù hợp, vui lòng kiểm tra lại!!!" + RESET);
+//        }
+//        }
+//}
 
     private int calculateOrderByStatus(OrderStatus orderStatus) {
         return (int) orderService.findAll().stream().filter(o -> o.getOrderStatus().equals(orderStatus)).count();
@@ -403,6 +404,10 @@ public class OrderView {
         } else {
             for (Order order : orderList) {
                 showTBody(order);
+                if (order.getOrderStatus().equals(OrderStatus.DELIVERY) && LocalDateTime.now().isAfter(order.getDeliverAt().plusDays(3))) {
+                    order.setOrderStatus(OrderStatus.SUCCESS);
+                }
+                orderService.save(order);
             }
         }
         new ProductView().showTLine();
@@ -432,5 +437,18 @@ public class OrderView {
 
     public void showTBody(Order order) {
         System.out.printf(PURPLE + "|" + RESET + " %-4d| %-10s | %-15s| %-15s |  %-11s  | %-18s| %-11s| %-10s | %-23s" + PURPLE + "|\n", order.getId(), StringFormatter.getCurrentYearMonth(order.getOrderAt()), userService.findById(order.getUserId()).getFullName(), order.getName(), order.getPhoneNumber(), order.getAddress(), StringFormatter.formatCurrency(order.getTotal()), StringFormatter.getCurrentYearMonth(order.getDeliverAt()), changeOrderStatusColor(order.getOrderStatus()));
+    }
+
+
+    public int getTotalBoughtProduct(Product product){
+        int total=0;
+        for (Order order : orderService.findAll()) {
+            for (Product product1 : order.getOrdersDetail().keySet()) {
+                if(product1.getId().equals(product.getId())){
+                    total+=order.getOrdersDetail().get(product1);
+                }
+            }
+        }
+        return total;
     }
 }

@@ -80,9 +80,26 @@ public class HomeView {
                     break;
                 case 9:
                     if (HomeView.userLogin == null) {
-                        System.out.println(RED + "Vui lòng đăng nhập để mua hàng!!!" + RESET);
+                        System.out.println(RED + "Vui lòng đăng nhập/ đăng ký để mua hàng!!!" + RESET);
                         System.out.println();
-                        login();
+//                        login();
+                        System.out.println("Mời lựa chọn: ");
+                        System.out.println("1. Đăng nhập");
+                        System.out.println("2. Đăng ký");
+                        System.out.println("3. Thoát");
+                        switch (Validation.validateInt()) {
+                            case 1:
+                                login();
+                                break;
+                            case 2:
+                                register();
+                                break;
+                            case 3:
+                                return;
+                            default:
+                                System.out.println(RED + "Không có chức năng phù hợp, vui lòng chọn lại!!!" + RESET);
+                                break;
+                        }
                     }
                     break;
                 case 0:
